@@ -5,6 +5,7 @@ import se.angergard.game.component.ConeLightComponent;
 import se.angergard.game.component.DirectionalLightComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PointLightComponent;
+import se.angergard.game.component.RemoveEntityTimerComponent;
 import se.angergard.game.component.RemoveFloorComponent;
 import se.angergard.game.component.SpriteComponent;
 
@@ -25,5 +26,6 @@ public class Objects {
 	public static final ComponentMapper<SpriteComponent> SPRITE_MAPPER = ComponentMapper.getFor(SpriteComponent.class);
 	public static final ComponentMapper<Box2DComponent> BOX2D_MAPPER = ComponentMapper.getFor(Box2DComponent.class);
 	public static final ComponentMapper<RemoveFloorComponent> REMOVE_FLOOR_MAPPER = ComponentMapper.getFor(RemoveFloorComponent.class);
+	public static final ComponentMapper<RemoveEntityTimerComponent> REMOVE_ENTITY_TIMER_MAPPER = ComponentMapper.getFor(RemoveEntityTimerComponent.class);;
 	
 }

@@ -2,6 +2,7 @@ package se.angergard.game.system;
 
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.PlayerComponent;
+import se.angergard.game.component.RemoveFloorComponent;
 import se.angergard.game.util.Objects;
 
 import com.badlogic.ashley.core.Engine;
@@ -10,6 +11,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -20,11 +22,13 @@ public class PlayerSystem extends EntitySystem{
 	}
 	
 	private Entity player;
+	private Engine engine;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addedToEngine(Engine engine) {
 		player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).get(0);
+		this.engine = engine;
 	}
 	
 	@Override
@@ -48,6 +52,25 @@ public class PlayerSystem extends EntitySystem{
 			velocity.x += speed;
 		}
 		body.setLinearVelocity(velocity);
+		
+		if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
+			sendRemoveFloorEntity();
+		}
+		
+	}
+	
+	private void sendRemoveFloorEntity(){
+		Sprite sprite = Objects.SPRITE_MAPPER.get(player).sprite;
+		Vector2 playerPosition = new Vector2(sprite.getX(), sprite.getY());
+		
+		Entity entity = new Entity();
+		
+		RemoveFloorComponent removeFloorComponent = new RemoveFloorComponent();
+		removeFloorComponent.playerPosition = playerPosition;
+				
+		entity.add(removeFloorComponent);
+		
+		engine.addEntity(entity);
 	}
 	
 }

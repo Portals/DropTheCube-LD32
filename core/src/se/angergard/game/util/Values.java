@@ -20,6 +20,8 @@ public class Values {
 	public static final Color AMBIENT_LIGHT = Color.WHITE;
 
 	public static final float AMBIENT_LIGHT_BRIGHTNESS = 0.5f;
+
+	public static final float REMOVE_FLOOR_TIME = 3;
 	
 	
 }

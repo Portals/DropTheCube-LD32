@@ -70,7 +70,7 @@ public class EntityUtils {
 		
 		entity.add(lightComponent);
 		entity.add(directionalLightComponent);
-		
+
 		return entity;
 	}
 	
