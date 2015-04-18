@@ -7,6 +7,8 @@ import se.angergard.game.component.AStarComponent;
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.SpriteComponent;
+import se.angergard.game.interfaces.Initializable;
+import se.angergard.game.util.EntityUtils;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
 
@@ -21,13 +23,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 
-public class AStarSystem extends IntervalSystem{
+public class AStarSystem extends IntervalSystem implements Initializable{
 
 	public AStarSystem() {
 		super(.1f);
-		
-		entities = new Array<Entity>();
-		pathArray = new Array<Entity>();
 	}
 	
 	private Entity player;
@@ -35,6 +34,13 @@ public class AStarSystem extends IntervalSystem{
 	private Engine engine;
 	
 	private Array<Entity> pathArray;
+	
+
+	@Override
+	public void init() {
+		entities = new Array<Entity>();
+		pathArray = new Array<Entity>();
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -86,15 +92,9 @@ public class AStarSystem extends IntervalSystem{
 		}
 	}
 
-	int f = 0;
 	
 	@Override
-	protected void updateInterval() {
-		if(f == 0){
-			f++;
-			engine.addEntity(EntityUtils.createEnemyAStar(17, 17));
-		}
-		
+	protected void updateInterval() {		
 		for(Entity entity : entities){
 			SpriteComponent playerSpriteCompoennt = Objects.SPRITE_MAPPER.get(player);
 			int xPlayer = (int)playerSpriteCompoennt.sprite.getX();
@@ -170,5 +170,6 @@ public class AStarSystem extends IntervalSystem{
 		}	
 		
 	}
+
 	
 }

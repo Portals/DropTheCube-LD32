@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="49">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="82">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
@@ -10,28 +10,73 @@
  </layer>
  <layer name="CollisionTiles" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYMSBYQCXPLo6UsFg0o/P38TKE2snLfTjUoMuRiv9A+1/QvFDSD+6GcSkd2x8UgC10i8l+RcAuAwAYA==
+   eJxjZGBgYMSBYQCXPLo6UsFg0o/P38TKE2snNfUTUoMuRow9pOgfaP8TGz+E9KObQUx6x8YnBVAr/VKSfwGwBABc
   </data>
  </layer>
+ <objectgroup name="PointLights">
+  <object id="51" x="7.5" y="7">
+   <ellipse/>
+  </object>
+  <object id="52" x="248" y="7.5">
+   <ellipse/>
+  </object>
+  <object id="53" x="246.5" y="247.5">
+   <ellipse/>
+  </object>
+  <object id="54" x="7.5" y="245">
+   <ellipse/>
+  </object>
+  <object id="55" x="90" y="39.5">
+   <ellipse/>
+  </object>
+  <object id="56" x="160" y="40">
+   <ellipse/>
+  </object>
+  <object id="57" x="78.5" y="221">
+   <ellipse/>
+  </object>
+  <object id="58" x="165.5" y="223">
+   <ellipse/>
+  </object>
+  <object id="59" x="219.5" y="131.5">
+   <ellipse/>
+  </object>
+  <object id="61" x="129" y="131.5">
+   <ellipse/>
+  </object>
+  <object id="62" x="36.5" y="124">
+   <ellipse/>
+  </object>
+  <object id="63" x="29" y="215">
+   <ellipse/>
+  </object>
+  <object id="68" x="130.333" y="7.66667">
+   <ellipse/>
+  </object>
+  <object id="69" x="3.33333" y="125">
+   <ellipse/>
+  </object>
+  <object id="70" x="250" y="127.667">
+   <ellipse/>
+  </object>
+  <object id="72" x="128.333" y="247.333">
+   <ellipse/>
+  </object>
+ </objectgroup>
  <objectgroup name="Collision">
-  <object id="5" x="0" y="0" width="112" height="16"/>
-  <object id="6" x="-0.333333" y="15.6667" width="16" height="96"/>
-  <object id="7" x="0" y="144" width="16" height="112"/>
-  <object id="8" x="16" y="240" width="96" height="16"/>
-  <object id="9" x="144" y="240" width="112" height="16"/>
-  <object id="13" x="240" y="144" width="16" height="96"/>
-  <object id="15" x="144" y="0" width="112" height="16"/>
-  <object id="16" x="240" y="16.3333" width="16" height="96"/>
-  <object id="20" x="160" y="64.125">
-   <polyline points="0,0 31.75,-0.25 31.75,15.75 47.625,15.75 48,143.625 -96.125,143.75 -96,159.875 -111.875,159.625 -112.125,111.875 -127.875,112 -128,79.875 -112.125,80 -112.25,111.875 -80.125,111.875 -80.125,127.875 -47.875,127.75 -47.875,111.875 -16.125,112 -16.25,127.625 32.25,127.875 31.75,15.75 0.125,15.75 0,0"/>
+  <object id="75" x="16" y="112">
+   <polyline points="0,0 0,-96 96,-96 96,-112 128,-112 128,-96 224,-96 224,0 240,0 240,32 224,32 224,128 128,128 128,144 96,144 96,128 0,128 0,32 -16,32 -16,0 0,0"/>
   </object>
-  <object id="21" x="47.9375" y="111.938">
-   <polyline points="0,0 -15.9375,-0.0625 -16,-32 0,-32.0625 0.0625,-47.875 32,-47.875 32,-32 0,-32.0625 0.0625,-0.125"/>
+  <object id="76" x="32" y="112">
+   <polyline points="0,0 0,-48 48,-48 48,-32 16,-32 16,0 0,0"/>
   </object>
-  <object id="22" x="112" y="64" width="31.9565" height="15.9565"/>
-  <object id="24" x="80" y="111.969" width="16" height="32"/>
-  <object id="36" x="160" y="112" width="16" height="32"/>
-  <object id="44" x="32" y="63.8182" width="16" height="16"/>
-  <object id="46" x="192" y="63.8182" width="16" height="16"/>
+  <object id="77" x="112" y="64">
+   <polyline points="0,0 32,0 32,16 0,16 0,0"/>
+  </object>
+  <object id="78" x="160" y="64">
+   <polyline points="0,0 48,0 48,144 -96,144 -96,160 -112,160 -112,128 -128,128 -128,80 -112,80 -112,112 -80,112 -80,128 -48,128 -48,112 -16,112 -16,128 32,128 32,16 0,16 0,0"/>
+  </object>
+  <object id="79" x="80" y="112" width="16" height="32"/>
+  <object id="81" x="160" y="112" width="16" height="32"/>
  </objectgroup>
 </map>

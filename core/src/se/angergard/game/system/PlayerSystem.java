@@ -2,8 +2,12 @@ package se.angergard.game.system;
 
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.PlayerComponent;
+import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.RemoveFloorComponent;
+import se.angergard.game.component.SpriteComponent;
+import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Objects;
+import box2dLight.PointLight;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -15,14 +19,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class PlayerSystem extends EntitySystem{
+public class PlayerSystem extends EntitySystem implements Initializable{
 
-	public PlayerSystem(){
-		
-	}
-	
 	private Entity player;
 	private Engine engine;
+	
+	@Override
+	public void init() {
+		
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -57,6 +62,18 @@ public class PlayerSystem extends EntitySystem{
 			sendRemoveFloorEntity();
 		}
 		
+		SpriteComponent spriteComponent = Objects.SPRITE_MAPPER.get(player);
+		Sprite sprite = spriteComponent.sprite;
+		
+		PointLightComponent pointLightComponent = Objects.POINT_LIGHT_MAPPER.get(player);
+		if(pointLightComponent.pointLight == null){
+			System.out.println("PointLight == null");
+			return;
+		}
+		
+		PointLight pointLight = pointLightComponent.pointLight;
+		pointLight.setPosition(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
+		
 	}
 	
 	private void sendRemoveFloorEntity(){
@@ -72,5 +89,6 @@ public class PlayerSystem extends EntitySystem{
 		
 		engine.addEntity(entity);
 	}
+
 	
 }

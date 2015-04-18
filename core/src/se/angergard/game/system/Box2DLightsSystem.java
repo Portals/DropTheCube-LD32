@@ -5,6 +5,7 @@ import se.angergard.game.component.DirectionalLightComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.enums.LightType;
+import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
 import box2dLight.ConeLight;
@@ -16,18 +17,18 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
 
-public class Box2DLightsSystem extends EntitySystem{
-
-	public Box2DLightsSystem(){
+public class Box2DLightsSystem extends EntitySystem implements Initializable{
+	
+	private RayHandler rayHandler;
+	
+	@Override
+	public void init() {
 		rayHandler = new RayHandler(Objects.WORLD);
 		rayHandler.setShadows(Values.SHADOWS);
 		rayHandler.setAmbientLight(Values.AMBIENT_LIGHT);
 		rayHandler.setAmbientLight(Values.AMBIENT_LIGHT_BRIGHTNESS);
 	}
-	
-	private RayHandler rayHandler;
 		
 	@Override
 	public void update(float deltaTime) {
@@ -38,12 +39,15 @@ public class Box2DLightsSystem extends EntitySystem{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addedToEngine(final Engine engine) { 
-		engine.addEntityListener(Family.getFor(LightComponent.class), new EntityListener(){
+		engine.addEntityListener(new EntityListener(){
 
 			@Override
 			public void entityAdded(Entity entity) {
-				System.out.println("Light added");
 				LightComponent lightComponent = Objects.LIGHT_MAPPER.get(entity);
+				if(lightComponent == null){
+					return;
+				}
+
 				LightType lightType = lightComponent.lightType;
 				
 				if(lightType == LightType.ConeLight){
@@ -71,5 +75,4 @@ public class Box2DLightsSystem extends EntitySystem{
 		});
 	}
 
-	
 }

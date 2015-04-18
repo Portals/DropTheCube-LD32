@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="40">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
  <layer name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYMSBWaAYlzwMM5GJkfUTsgObnehsUuylpX5sZmGTx2c/PvOQ9bAQGb7YMAsV9FPqflqF30DEPyXplxxMyA5i8i8AV30BqQ==
+   eJxjYMANWKCYEGAiEyPrJxVg00+KvbTUzwjFuPjE6kfH2PSz4HAjI5L5jDjUsFBBP6Xup0X4DVT8kwLQ9VOSf3ABYvIvAHaOATk=
   </data>
  </layer>
+ <layer name="CollisionTiles" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYMSBYQCXPLo6UgGyfkJ2YLMTnU2KvbTUj80sbPL47MdnHrFupmb84FODzS3Eup9W4YcP0Eo/JemXHEBsvsSnBgDU0ABp
+  </data>
+ </layer>
+ <objectgroup name="Collision">
+  <object id="19" x="16" y="16">
+   <polyline points="0,0 0,96 -16,96 -16,128 0,128 0,224 96,224 96,240 128,240 128,224 224,224 224,128 240,128 240,96 224,96 224,0 128,0 128,-16 96,-16 96,0 0,0"/>
+  </object>
+  <object id="21" x="48" y="112">
+   <polyline points="0,0 0,-64 160,-64 160,0 176,0 176,-80 -16,-80 -16,0 0,0"/>
+  </object>
+  <object id="22" x="32" y="144">
+   <polyline points="0,0 16,0 16,64 176,64 176,0 192,0 192,80 0,80 0,0"/>
+  </object>
+  <object id="35" x="80" y="80">
+   <polyline points="0,0 32,0 32,16 64,16 64,0 96,0 96,32 80,32 80,64 96,64 96,96 64,96 64,80 16,80 32,80 32,96 0,96 0,64 16,64 16,32 0,32 0,0"/>
+  </object>
+  <object id="36" x="128" y="6.66667">
+   <ellipse/>
+  </object>
+  <object id="37" x="5.66667" y="125.667">
+   <ellipse/>
+  </object>
+  <object id="38" x="247.667" y="126.333">
+   <ellipse/>
+  </object>
+  <object id="39" x="123" y="247.667">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="PointLights">
+  <object id="2" x="60" y="59.6667">
+   <ellipse/>
+  </object>
+  <object id="3" x="196.667" y="59.3333">
+   <ellipse/>
+  </object>
+  <object id="5" x="198.667" y="197">
+   <ellipse/>
+  </object>
+  <object id="7" x="60.3333" y="198.667">
+   <ellipse/>
+  </object>
+  <object id="8" x="91.3333" y="129">
+   <ellipse/>
+  </object>
+  <object id="9" x="160.333" y="126.667">
+   <ellipse/>
+  </object>
+  <object id="10" x="32.3333" y="129">
+   <ellipse/>
+  </object>
+  <object id="12" x="229" y="128.333">
+   <ellipse/>
+  </object>
+  <object id="15" x="129.333" y="100.333">
+   <ellipse/>
+  </object>
+  <object id="18" x="128.667" y="158">
+   <ellipse/>
+  </object>
+ </objectgroup>
 </map>

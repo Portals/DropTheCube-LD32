@@ -1,68 +1,132 @@
 package se.angergard.game.system;
 
+import java.util.Iterator;
+
 import se.angergard.game.astar.AStar;
+import se.angergard.game.component.Box2DComponent;
+import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PlayerComponent;
+import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.SpriteComponent;
+import se.angergard.game.enums.LightType;
+import se.angergard.game.interfaces.Createable;
+import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Box2DUtils;
+import se.angergard.game.util.CameraSize;
 import se.angergard.game.util.Objects;
+import se.angergard.game.util.Pixels;
 import se.angergard.game.util.Values;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 
-public class MapControllerSystem extends EntitySystem {
-	
-	public MapControllerSystem(){
+public class MapControllerSystem extends EntitySystem implements Initializable, Createable{
+
+	private Engine engine;
+	private Entity player;
+	private TiledMap[] maps;
+	private OrthogonalTiledMapRenderer mapRenderer;
+	private boolean[][] solids; //for maps[0] atm
+	private ImmutableArray<Body> tiledMapBodies;
+	private Array<Entity> pointLights;
+
+	@Override
+	public void init() {
 		maps = new TiledMap[Values.MAPS];
 		
 		TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
 		
 		for(int i = 0; i < Values.MAPS; i++){
 			maps[i] = mapLoader.load("smallmaps/smallmap" + i + ".tmx");
-			
 		}
-		Box2DUtils.create(maps[0]);
 		
 		solids = new boolean[Values.MAP_SIZE][Values.MAP_SIZE];
 		AStar.setSolids(solids);
 		
-		initSolidTiles(maps[0]);
+		mapRenderer = new OrthogonalTiledMapRenderer(maps[3]);
 		
-		mapRenderer = new OrthogonalTiledMapRenderer(maps[0]);
+		pointLights = new Array<Entity>();
 	}
 	
-	private Entity player;
-	private TiledMap[] maps;
-	private OrthogonalTiledMapRenderer mapRenderer;
-	private boolean[][] solids; //for maps[0] atm
+	@Override
+	public void create() {
+		loadMap(0);
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addedToEngine(Engine engine) {
+		this.engine = engine;
 		player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).get(0); //Since there's only one player
 	}
 	
 	public void update(float delta){
+		Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(player);
+		Body body = box2DComponent.body;
+		
 		SpriteComponent spriteComponent = Objects.SPRITE_MAPPER.get(player);
 		Sprite sprite = spriteComponent.sprite;
 		float xPos = sprite.getX();
 		float yPos = sprite.getY();
-				
-//		if(xPos < Values.TILED_SIZE_PIXELS|| yPos < Values.TILED_SIZE_PIXELS || xPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS || yPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
-//			mapRenderer.setMap(maps[MathUtils.random(0, maps.length - 1)]);
-//		}	
+
+		if(xPos <= 5){
+			body.setTransform(Pixels.toMeters(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 2), Pixels.toMeters(CameraSize.getHeight() / 2), 0);
+			loadMap(MathUtils.random(0, maps.length - 1));
+		}
+		
+		else if(yPos <= 5){
+			body.setTransform(Pixels.toMeters(CameraSize.getWidth() / 2), Pixels.toMeters(Values.TILED_SIZE_PIXELS), 0);
+			loadMap(MathUtils.random(0, maps.length - 1));		
+		}
+		
+		else if(xPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
+			body.setTransform(Pixels.toMeters(Values.TILED_SIZE_PIXELS * 2), Pixels.toMeters(CameraSize.getHeight() / 2), 0);
+			loadMap(MathUtils.random(0, maps.length - 1));		
+		}
+		
+		else if(yPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
+			body.setTransform(Pixels.toMeters(CameraSize.getWidth() / 2), Pixels.toMeters(Values.TILED_SIZE_PIXELS * 2), 0);
+			loadMap(MathUtils.random(0, maps.length - 1));			
+		}
 		
 		mapRenderer.setView(Objects.CAMERA);
 		mapRenderer.render();
+	}
+		
+	private void loadMap(int map){
+		if(tiledMapBodies != null){//Map has been changed
+			//Destroy all old bodies
+			for(int i = 0; i < tiledMapBodies.size(); i++){
+				Objects.WORLD.destroyBody(tiledMapBodies.get(i));
+			}
+			
+			//Removes all old lights
+			for(Entity pointLight : pointLights){
+				Objects.POINT_LIGHT_MAPPER.get(pointLight).pointLight.remove();
+			}
+			pointLights.clear();
+		}
+		
+		initSolidTiles(maps[map]);
+		tiledMapBodies = Box2DUtils.create(maps[map]);
+		createLights(maps[map]);	
+		mapRenderer.setMap(maps[map]);
 	}
 	
 	private void initSolidTiles(TiledMap map){
@@ -85,4 +149,39 @@ public class MapControllerSystem extends EntitySystem {
 			}
 		}
 	}
+	
+	
+	private void createLights(TiledMap tiledMap) {
+		MapLayer layer = tiledMap.getLayers().get("PointLights");
+		
+		Iterator<MapObject> it = layer.getObjects().iterator();
+		while(it.hasNext()){
+			MapObject object = it.next();
+			//Always going to be a circle
+			EllipseMapObject ellipse = (EllipseMapObject) object;
+			
+			Entity entity = new Entity();
+			
+			PointLightComponent pointComponent = new PointLightComponent();
+			pointComponent.color = Values.LIGHT_COLORS[MathUtils.random(0, Values.LIGHT_COLORS.length - 1)];
+			pointComponent.maxDistance = Values.POINT_LIGHT_DEFAULT_MAX_DISTANCE;
+			pointComponent.numRays = Values.POINT_LIGHT_DEFAULT_NUM_RAYS;
+			pointComponent.x = ellipse.getEllipse().x;
+			pointComponent.y = ellipse.getEllipse().y;
+			
+			LightComponent lightComponent = new LightComponent();
+			lightComponent.lightType = LightType.PointLight;
+			
+			entity.add(pointComponent);
+			entity.add(lightComponent);
+			
+			engine.addEntity(entity);
+			
+			pointLights.add(entity);
+		}
+		
+	}
+
+	
 }
+

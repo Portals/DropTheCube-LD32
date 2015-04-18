@@ -1,4 +1,4 @@
-package se.angergard.game.system;
+package se.angergard.game.util;
 
 import se.angergard.game.component.AStarComponent;
 import se.angergard.game.component.Box2DComponent;
@@ -10,11 +10,10 @@ import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.enums.LightType;
-import se.angergard.game.util.Box2DUtils;
-import se.angergard.game.util.CameraSize;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -69,9 +68,21 @@ public class EntityUtils {
 		
 		PlayerComponent playerComponent = new PlayerComponent();
 		
+		LightComponent lightComponent = new LightComponent();
+		lightComponent.lightType = LightType.PointLight;
+		
+		PointLightComponent pointLightComponent = new PointLightComponent();
+		pointLightComponent.color = Color.BLUE;
+		pointLightComponent.maxDistance = 20f;
+		pointLightComponent.numRays = 100;
+		pointLightComponent.x = sprite.getX();
+		pointLightComponent.y = sprite.getY();
+		
 		entity.add(spriteComponent);
 		entity.add(box2DComponent);
 		entity.add(playerComponent);
+		entity.add(pointLightComponent);
+		entity.add(lightComponent);
 		
 		return entity;
 	}

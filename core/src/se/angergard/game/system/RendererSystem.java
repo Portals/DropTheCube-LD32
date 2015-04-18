@@ -1,6 +1,7 @@
 package se.angergard.game.system;
 
 import se.angergard.game.component.SpriteComponent;
+import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Objects;
 
 import com.badlogic.ashley.core.Entity;
@@ -10,18 +11,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-public class RendererSystem extends IteratingSystem{
+public class RendererSystem extends IteratingSystem implements Initializable{
 	
 	@SuppressWarnings("unchecked")
 	public RendererSystem() {
 		super(Family.getFor(SpriteComponent.class));
-		
-		batch = new SpriteBatch();
-		renderQueue = new Array<Sprite>();
 	}
 	
 	private SpriteBatch batch;
 	private Array<Sprite> renderQueue;
+	
+
+	@Override
+	public void init() {
+		batch = new SpriteBatch();
+		renderQueue = new Array<Sprite>();
+	}
 	
 	@Override
 	public void update(float deltaTime) {

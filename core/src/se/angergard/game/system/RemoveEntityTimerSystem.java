@@ -2,6 +2,7 @@ package se.angergard.game.system;
 
 import se.angergard.game.component.RemoveEntityTimerComponent;
 import se.angergard.game.component.SpriteComponent;
+import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Objects;
 
 import com.badlogic.ashley.core.Engine;
@@ -11,16 +12,17 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 
-public class RemoveEntityTimerSystem extends EntitySystem{
-	
-	public RemoveEntityTimerSystem() {
-		entities = new Array<Entity>();
-		entitiesToRemove = new Array<Entity>();
-	}
+public class RemoveEntityTimerSystem extends EntitySystem implements Initializable{
 
 	private Array<Entity> entities;
 	private Array<Entity> entitiesToRemove;
 	private Engine engine;
+	
+	@Override
+	public void init() {
+		entities = new Array<Entity>();
+		entitiesToRemove = new Array<Entity>();
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -61,5 +63,6 @@ public class RemoveEntityTimerSystem extends EntitySystem{
 		
 		entitiesToRemove.clear();
 	}
+
 	
 }

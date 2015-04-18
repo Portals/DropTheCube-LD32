@@ -76,7 +76,11 @@ public class Box2DUtils {
 				bodyDef.position.set(Pixels.toMeters(new Vector2(rect.x + rect.width / 2, rect.y + rect.height / 2)));
 				
 				Body body = Objects.WORLD.createBody(bodyDef);
-				body.createFixture(polygon, 1);
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.friction = 0;
+				fixtureDef.density = 1;
+				fixtureDef.shape = polygon;
+				body.createFixture(fixtureDef);
 				
 				bodies.add(body);
 				
@@ -98,7 +102,11 @@ public class Box2DUtils {
 			bodyDef.type = BodyType.StaticBody;
 			
 			Body body = Objects.WORLD.createBody(bodyDef);
-			body.createFixture(shape, 1);
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.friction = 0;
+			fixtureDef.density = 1;
+			fixtureDef.shape = shape;
+			body.createFixture(fixtureDef);
 			
 			bodies.add(body);
 			

@@ -1,11 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="37">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
  <layer name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYMSBWaAYlzwMM5GJCekfqfKMWORxqWPBoo9QmMPYLFTQT6n7B2P4DxZ5YuICHyYm/wIAh60BwQ==
+   eJxjYMANWKCYEGAiExPSP1LlGbDI41LHgkUfoTCHsVmooJ9S95MTPiNFnpi4wAeIyb8A5v4BcQ==
   </data>
  </layer>
+ <layer name="CollisionTiles" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYMSBYQCXPLo6UgEh/SNVnhGLPD51uPi47CRHjhQ7SXH/YAz/wSJPCBCbL/GpAQCkoABR
+  </data>
+ </layer>
+ <objectgroup name="Collision">
+  <object id="1" x="16" y="16">
+   <polyline points="0,0 0,96 -16,96 -16,128 0,128 0,224 96,224 96,240 128,240 128,224 224,224 224,128 240,128 240,96 224,96 224,0 128,0 128,-16 96,-16 96,0 0,0"/>
+  </object>
+  <object id="4" x="112" y="32" width="32" height="80"/>
+  <object id="5" x="80" y="96" width="16" height="16"/>
+  <object id="6" x="48" y="112" width="16" height="32"/>
+  <object id="7" x="80" y="144" width="16" height="16"/>
+  <object id="8" x="112" y="144" width="32" height="80"/>
+  <object id="9" x="160" y="144" width="16" height="16"/>
+  <object id="10" x="192" y="112" width="16" height="32"/>
+  <object id="11" x="160" y="96" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="PointLights">
+  <object id="12" x="49.6667" y="49.3333">
+   <ellipse/>
+  </object>
+  <object id="13" x="89" y="50.3333">
+   <ellipse/>
+  </object>
+  <object id="15" x="49.3333" y="82.3333">
+   <ellipse/>
+  </object>
+  <object id="16" x="82.3333" y="80.3333">
+   <ellipse/>
+  </object>
+  <object id="17" x="169" y="36.6667">
+   <ellipse/>
+  </object>
+  <object id="18" x="225.667" y="40.3333">
+   <ellipse/>
+  </object>
+  <object id="19" x="174.333" y="64.6667">
+   <ellipse/>
+  </object>
+  <object id="20" x="211.333" y="77">
+   <ellipse/>
+  </object>
+  <object id="21" x="169.333" y="180.333">
+   <ellipse/>
+  </object>
+  <object id="22" x="224.667" y="170.667">
+   <ellipse/>
+  </object>
+  <object id="23" x="210.667" y="204.333">
+   <ellipse/>
+  </object>
+  <object id="25" x="166.333" y="214">
+   <ellipse/>
+  </object>
+  <object id="26" x="52" y="170.667">
+   <ellipse/>
+  </object>
+  <object id="27" x="85.3333" y="176.333">
+   <ellipse/>
+  </object>
+  <object id="31" x="44.3333" y="208.667">
+   <ellipse/>
+  </object>
+  <object id="32" x="89" y="214">
+   <ellipse/>
+  </object>
+  <object id="33" x="124" y="7">
+   <ellipse/>
+  </object>
+  <object id="34" x="4.33333" y="129">
+   <ellipse/>
+  </object>
+  <object id="35" x="248" y="127.333">
+   <ellipse/>
+  </object>
+  <object id="36" x="124.667" y="244.333">
+   <ellipse/>
+  </object>
+ </objectgroup>
 </map>

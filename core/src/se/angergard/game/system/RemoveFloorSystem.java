@@ -3,6 +3,7 @@ package se.angergard.game.system;
 import se.angergard.game.component.RemoveEntityTimerComponent;
 import se.angergard.game.component.RemoveFloorComponent;
 import se.angergard.game.component.SpriteComponent;
+import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
 
@@ -16,7 +17,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
-public class RemoveFloorSystem extends EntitySystem{
+public class RemoveFloorSystem extends EntitySystem implements Initializable{
+
+	@Override
+	public void init() {	
+		
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -51,4 +57,5 @@ public class RemoveFloorSystem extends EntitySystem{
 			
 		});
 	}
+
 }
