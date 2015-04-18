@@ -31,7 +31,7 @@ public class RemoveEntityTimerSystem extends EntitySystem{
 
 			@Override
 			public void entityAdded(Entity entity) {
-				RemoveEntityTimerComponent comp = Objects.REMOVE_ENTITY_TIMER_MAPPER.get(entity); //I DON't KNOW WHY I NEED TO DO THIS?==!?!?!?!?
+				RemoveEntityTimerComponent comp = Objects.REMOVE_ENTITY_TIMER_MAPPER.get(entity); 
 				if(comp != null)
 					entities.add(entity);
 			}

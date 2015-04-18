@@ -1,8 +1,10 @@
 package se.angergard.game.system;
 
+import se.angergard.game.component.AStarComponent;
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.ConeLightComponent;
 import se.angergard.game.component.DirectionalLightComponent;
+import se.angergard.game.component.EnemyComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.PointLightComponent;
@@ -18,6 +20,41 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class EntityUtils {
 	
+	public static final Entity createEnemyAStar(float x, float y){
+		Entity entity = new Entity();
+		
+		EnemyComponent enemyComponent = new EnemyComponent();
+		
+		SpriteComponent spriteComponent = new SpriteComponent();
+		spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Ai.png")));
+		spriteComponent.sprite.setPosition(x, y);
+		
+		Box2DComponent box2DComponent = Box2DUtils.create(spriteComponent.sprite);
+		
+		AStarComponent aiStarComponent = new AStarComponent();
+
+		entity.add(enemyComponent);
+		entity.add(spriteComponent);
+		entity.add(aiStarComponent);
+		entity.add(box2DComponent);
+		
+		return entity;
+	}
+	
+	public static final Entity createEnemy(float x, float y){
+		Entity entity = new Entity();
+		
+		EnemyComponent enemyComponent = new EnemyComponent();
+		
+		SpriteComponent spriteComponent = new SpriteComponent();
+		spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Ai.png")));
+		spriteComponent.sprite.setPosition(x, y);
+				
+		entity.add(enemyComponent);
+		entity.add(spriteComponent);		
+		return entity;
+	}
+		
 	public static final Entity createPlayer(){
 		Entity entity = new Entity();
 		

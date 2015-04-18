@@ -1,5 +1,6 @@
 package se.angergard.game.screen;
 
+import se.angergard.game.system.AStarSystem;
 import se.angergard.game.system.Box2DDebugRendererSystem;
 import se.angergard.game.system.Box2DLightsSystem;
 import se.angergard.game.system.Box2DToSpritePositionSystem;
@@ -34,6 +35,7 @@ public class PlayScreen implements Screen{
 		entityEngine.addSystem(new RemoveEntityTimerSystem());
 		entityEngine.addSystem(new PlayerSystem());
 		entityEngine.addSystem(new RemoveFloorSystem());
+		entityEngine.addSystem(new AStarSystem());
 		entityEngine.addSystem(new Box2DToSpritePositionSystem());
 		entityEngine.addSystem(new MapControllerSystem());
 		entityEngine.addSystem(new RendererSystem());

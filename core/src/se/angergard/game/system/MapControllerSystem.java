@@ -1,10 +1,9 @@
 package se.angergard.game.system;
 
+import se.angergard.game.astar.AStar;
 import se.angergard.game.component.PlayerComponent;
-import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.util.Box2DUtils;
-import se.angergard.game.util.CameraSize;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
 
@@ -13,9 +12,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
@@ -32,12 +32,18 @@ public class MapControllerSystem extends EntitySystem {
 		}
 		Box2DUtils.create(maps[0]);
 		
+		solids = new boolean[Values.MAP_SIZE][Values.MAP_SIZE];
+		AStar.setSolids(solids);
+		
+		initSolidTiles(maps[0]);
+		
 		mapRenderer = new OrthogonalTiledMapRenderer(maps[0]);
 	}
 	
 	private Entity player;
 	private TiledMap[] maps;
 	private OrthogonalTiledMapRenderer mapRenderer;
+	private boolean[][] solids; //for maps[0] atm
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -59,21 +65,24 @@ public class MapControllerSystem extends EntitySystem {
 		mapRenderer.render();
 	}
 	
-	
-//	if(xPos < 1){
-//		
-//	}
-//	
-//	if(yPos < 1){
-//		
-//	}
-//	
-//	if(xPos >= Values.MAP_SIZE - 1){
-//		
-//	}
-//	
-//	if(yPos >= Values.MAP_SIZE - 1){
-//		
-//	}
-	
+	private void initSolidTiles(TiledMap map){
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("CollisionTiles");
+		
+		for(int x = 0; x < layer.getWidth(); x++){
+			for(int y = 0; y < layer.getHeight(); y++){
+				Cell cell = layer.getCell(x, y);
+				if(cell == null){
+					solids[x][y] = false;
+					continue;
+				}
+				if(cell.getTile() == null){
+					solids[x][y] = false;
+					continue;
+				}
+				else{
+					solids[x][y] = true;
+				}
+			}
+		}
+	}
 }

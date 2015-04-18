@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="37">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="49">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
  <layer name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYMSBWaAYlzwMM5GJB5t+fHxsdqHLE2snNfWzEFCDLoYsx0IF/QPtf1L4xOonNr1j4w9E+qUk/wIAg0kBuQ==
+   eJxjYMANWKCYEGAiEw8m/dj8Q6o8sXZSUz8LATXoYshyLFTQP9D+Z0Bj45InpB/dDHwAn/6BSL+4ADH5FwDQNgFb
+  </data>
+ </layer>
+ <layer name="CollisionTiles" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYMSBYQCXPLo6UsFg0o/P38TKE2snLfTjUoMuRiv9A+1/QvFDSD+6GcSkd2x8UgC10i8l+RcAuAwAYA==
   </data>
  </layer>
  <objectgroup name="Collision">
@@ -26,5 +31,7 @@
   <object id="22" x="112" y="64" width="31.9565" height="15.9565"/>
   <object id="24" x="80" y="111.969" width="16" height="32"/>
   <object id="36" x="160" y="112" width="16" height="32"/>
+  <object id="44" x="32" y="63.8182" width="16" height="16"/>
+  <object id="46" x="192" y="63.8182" width="16" height="16"/>
  </objectgroup>
 </map>
