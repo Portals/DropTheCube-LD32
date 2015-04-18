@@ -68,21 +68,9 @@ public class EntityUtils {
 		
 		PlayerComponent playerComponent = new PlayerComponent();
 		
-		LightComponent lightComponent = new LightComponent();
-		lightComponent.lightType = LightType.PointLight;
-		
-		PointLightComponent pointLightComponent = new PointLightComponent();
-		pointLightComponent.color = Color.BLUE;
-		pointLightComponent.maxDistance = 20f;
-		pointLightComponent.numRays = 100;
-		pointLightComponent.x = sprite.getX();
-		pointLightComponent.y = sprite.getY();
-		
 		entity.add(spriteComponent);
 		entity.add(box2DComponent);
 		entity.add(playerComponent);
-		entity.add(pointLightComponent);
-		entity.add(lightComponent);
 		
 		return entity;
 	}

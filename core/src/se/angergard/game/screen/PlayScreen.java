@@ -7,6 +7,7 @@ import se.angergard.game.system.AStarSystem;
 import se.angergard.game.system.Box2DDebugRendererSystem;
 import se.angergard.game.system.Box2DLightsSystem;
 import se.angergard.game.system.Box2DToSpritePositionSystem;
+import se.angergard.game.system.LightFollowPlayerSystem;
 import se.angergard.game.system.MapControllerSystem;
 import se.angergard.game.system.PlayerSystem;
 import se.angergard.game.system.RemoveEntityTimerSystem;
@@ -48,6 +49,7 @@ public class PlayScreen implements Screen{
 		entityEngine.addSystem(new AStarSystem());
 		//entityEngine.addSystem(new RotationConeLightSystem()); Doesn't work..
 		entityEngine.addSystem(new Box2DToSpritePositionSystem());
+		entityEngine.addSystem(new LightFollowPlayerSystem());
 		entityEngine.addSystem(new MapControllerSystem());
 		entityEngine.addSystem(new RendererSystem());
 		entityEngine.addSystem(new Box2DLightsSystem());

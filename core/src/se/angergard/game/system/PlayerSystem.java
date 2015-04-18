@@ -62,18 +62,6 @@ public class PlayerSystem extends EntitySystem implements Initializable{
 			sendRemoveFloorEntity();
 		}
 		
-		SpriteComponent spriteComponent = Objects.SPRITE_MAPPER.get(player);
-		Sprite sprite = spriteComponent.sprite;
-		
-		PointLightComponent pointLightComponent = Objects.POINT_LIGHT_MAPPER.get(player);
-		if(pointLightComponent.pointLight == null){
-			System.out.println("PointLight == null");
-			return;
-		}
-		
-		PointLight pointLight = pointLightComponent.pointLight;
-		pointLight.setPosition(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-		
 	}
 	
 	private void sendRemoveFloorEntity(){
