@@ -6,9 +6,9 @@ import se.angergard.game.astar.Vector2i;
 import se.angergard.game.component.AStarComponent;
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.PlayerComponent;
+import se.angergard.game.component.SpeedComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.interfaces.Initializable;
-import se.angergard.game.util.EntityUtils;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
 
@@ -100,7 +100,10 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 			
 			if(path == null) continue;
 			
-			if(!(path.size() > 0)) continue;
+			if(!(path.size() > 0)) {
+				System.out.println("PathSize : 0");
+				continue;
+			}
 			
 //			for(int i = path.size() - 1; i > 0; i--){
 //				Vector2i pos = path.get(i).position;
@@ -109,7 +112,8 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 //				engine.addEntity(pathEntity);
 //			}
 		
-			float speed = 1f;
+			SpeedComponent speedComponent = Objects.SPEED_MAPPER.get(entity);
+			float speed = speedComponent.speed;
 			
 			SpriteComponent spriteComponent = Objects.SPRITE_MAPPER.get(entity);
 			Sprite sprite = spriteComponent.sprite;

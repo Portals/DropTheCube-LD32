@@ -23,7 +23,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class EntityUtils {
 	
-	public static final Entity createEnemyAStar(float x, float y){		
+	public static final Entity createEnemyAStar(float x, float y, float speed){		
 		Entity entity = new Entity();
 		
 		EnemyComponent enemyComponent = new EnemyComponent();
@@ -37,6 +37,7 @@ public class EntityUtils {
 		AStarComponent aStarComponent = new AStarComponent();
 
 		SpeedComponent speedComponent = new SpeedComponent();
+		speedComponent.speed = speed;
 		
 		AshleyUtils.addComponents(entity, enemyComponent, spriteComponent, aStarComponent, box2DComponent, speedComponent);
 		

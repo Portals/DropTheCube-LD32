@@ -10,6 +10,7 @@ import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.RemoveEntityTimerComponent;
 import se.angergard.game.component.RemoveFloorComponent;
 import se.angergard.game.component.ScoreComponent;
+import se.angergard.game.component.SpeedComponent;
 import se.angergard.game.component.SpriteComponent;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -34,5 +35,6 @@ public class Objects {
 	public static final ComponentMapper<AStarComponent> AI_STAR_MAPPER = ComponentMapper.getFor(AStarComponent.class);
 	public static final ComponentMapper<HealthComponent> HEALTH_MAPPER = ComponentMapper.getFor(HealthComponent.class);
 	public static final ComponentMapper<ScoreComponent> SCORE_MAPPER = ComponentMapper.getFor(ScoreComponent.class);
+	public static final ComponentMapper<SpeedComponent> SPEED_MAPPER = ComponentMapper.getFor(SpeedComponent.class);
 	
 }

@@ -54,9 +54,9 @@ public class DrawInfoSystem extends EntitySystem implements Initializable, Creat
 			Objects.BATCH.draw(heartTexture, i * heartTexture.getWidth() * scl + 1, CameraSize.getHeight() - heartTexture.getHeight() * scl - 2, heartTexture.getWidth() * scl, heartTexture.getHeight() * scl);
 		}
 		
-		label.setFontScale(0.5f);
+		label.setFontScale(0.45f);
 		label.setPosition(Values.MAX_HEALTH * heartTexture.getWidth() * scl + 5, CameraSize.getHeight() - heartTexture.getHeight() * scl / 2);
-		label.setText("Score:" + scoreComponent.score + ", Level:" + scoreComponent.levels);
+		label.setText("Score:" + scoreComponent.score + ",Level:" + scoreComponent.levels);
 		label.draw(Objects.BATCH, 1);
 		
 		Objects.BATCH.end();

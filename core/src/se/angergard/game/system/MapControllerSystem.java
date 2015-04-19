@@ -142,7 +142,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	
 	@Override
 	public void create() {
-		loadMap(0, new Vector2(Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2));
+		loadMap(0, new Vector2(CameraSize.getWidth() / 2 - 8, CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 3));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -267,12 +267,19 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			spawnpoints.add(new Vector2(ellipse.x + ellipse.width / 2, ellipse.y + ellipse.height / 2));
 		}
 		
-		Vector2 vec = spawnpoints.get(MathUtils.random(0, spawnpoints.size - 1));
+		int numberOfEnemies = level / 6 + 1;
+		if(numberOfEnemies >= 8){
+			numberOfEnemies = 8;
+		}
+		float speed = (float) Math.pow(1.04, level);
 		
-		Entity entity = EntityUtils.createEnemyAStar(vec.x, vec.y);
-		enemies.add(entity);
+		for(int i = 0; i < numberOfEnemies; i++){
+			Vector2 vec = spawnpoints.get(MathUtils.random(0, spawnpoints.size - 1));
+			Entity enemy = EntityUtils.createEnemyAStar(vec.x, vec.y, speed);
+			enemies.add(enemy);
+			engine.addEntity(enemy);
+		}
 		
-		engine.addEntity(entity);
 	}
 
 	private void initSolidTiles(TiledMap map){
@@ -346,7 +353,9 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 				HealthComponent healthComponent = Objects.HEALTH_MAPPER.get(player);
 				healthComponent.health.hurt(1);
 				if(healthComponent.health.isDead()){
-					game.setScreen(new GameFinished(game, "You died,\nScore:")); //TODO: Add score
+					int score = scoreComponent.score;
+					int levels = scoreComponent.levels;
+					game.setScreen(new GameFinished(game, "You died,\nScore:" + score + "\nLevels:" + levels)); //TODO: Add score
 				}
 				else{
 					removeAllEnemies();
