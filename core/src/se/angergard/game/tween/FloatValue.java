@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package se.angergard.game.component;
+package se.angergard.game.tween;
 
-import se.angergard.game.astar.Node;
-import se.angergard.game.util.Values;
-
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.utils.ImmutableArray;
-
-public class AStarComponent extends Component{
-	public ImmutableArray<Node> path;
-	public float cooldown = Values.ENEMY_START_COOLDOWN;
+public class FloatValue {
+	public float value;
 }

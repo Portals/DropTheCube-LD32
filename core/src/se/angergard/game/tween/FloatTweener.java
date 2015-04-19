@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package se.angergard.game.component;
+package se.angergard.game.tween;
 
-import se.angergard.game.astar.Node;
-import se.angergard.game.util.Values;
+import aurelienribon.tweenengine.TweenAccessor;
 
-import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.utils.ImmutableArray;
+public class FloatTweener implements TweenAccessor<FloatValue>{
 
-public class AStarComponent extends Component{
-	public ImmutableArray<Node> path;
-	public float cooldown = Values.ENEMY_START_COOLDOWN;
+	@Override
+	public int getValues(FloatValue target, int tweenType, float[] returnValues) {
+		returnValues[0] = target.value;
+		return 1;
+	}
+
+	@Override
+	public void setValues(FloatValue target, int tweenType, float[] newValues) {
+		System.out.println(newValues[0]);
+		target.value = newValues[0];
+	}
+
 }
