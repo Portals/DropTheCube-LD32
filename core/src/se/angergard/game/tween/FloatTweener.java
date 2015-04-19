@@ -27,7 +27,6 @@ public class FloatTweener implements TweenAccessor<FloatValue>{
 
 	@Override
 	public void setValues(FloatValue target, int tweenType, float[] newValues) {
-		System.out.println(newValues[0]);
 		target.value = newValues[0];
 	}
 

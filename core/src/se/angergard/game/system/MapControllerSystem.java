@@ -74,7 +74,6 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	public MapControllerSystem(MainGame game){ //Because MapControllerSystem checks alot of things
 		this.game = game;
 	}
-
 	private MainGame game;
 	private Engine engine;
 	private Entity player;
@@ -89,7 +88,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	private int lastGate = -1;
 
 	@Override
-	public void init() {
+	public void init() {		
 		maps = new TiledMap[Values.MAPS];
 		
 		TmxMapLoader mapLoader = new TmxMapLoader(new InternalFileHandleResolver());
@@ -292,10 +291,12 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		if(numberOfEnemies >= 8){
 			numberOfEnemies = 8;
 		}
-		float speed = (float) Math.pow(1.04, level);
+		float speed = (float) Math.pow(1.045, level);
 		
 		for(int i = 0; i < numberOfEnemies; i++){
-			Vector2 vec = spawnpoints.get(MathUtils.random(0, spawnpoints.size - 1));
+			int random = MathUtils.random(0, spawnpoints.size - 1);
+			Vector2 vec = spawnpoints.get(random);
+			spawnpoints.removeIndex(random);
 			Entity enemy = EntityUtils.createEnemyAStar(vec.x, vec.y, speed);
 			enemies.add(enemy);
 			engine.addEntity(enemy);
