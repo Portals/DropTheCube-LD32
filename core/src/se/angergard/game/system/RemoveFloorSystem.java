@@ -1,9 +1,11 @@
 package se.angergard.game.system;
 
+import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.RemoveEntityTimerComponent;
 import se.angergard.game.component.RemoveFloorComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.interfaces.Initializable;
+import se.angergard.game.util.Box2DUtils;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
 
@@ -39,12 +41,16 @@ public class RemoveFloorSystem extends EntitySystem implements Initializable{
 				tilePosition.scl(Values.MAP_SIZE);
 				
 				Entity holeEntity = new Entity();
+				
 				SpriteComponent spriteComponent = new SpriteComponent();
 				spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Hole.png")));
 				spriteComponent.sprite.setPosition(tilePosition.x, tilePosition.y);
 				
 				RemoveEntityTimerComponent removeEntityTimerComponent = new RemoveEntityTimerComponent();
 				removeEntityTimerComponent.time = Values.REMOVE_FLOOR_TIME;
+				
+				Box2DComponent box2DComponent = Box2DUtils.createCircle(spriteComponent.sprite);
+				
 				
 				entity.add(removeEntityTimerComponent);
 				entity.add(spriteComponent);

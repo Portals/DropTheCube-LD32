@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -24,30 +25,56 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
 public class Box2DUtils {
-
-	public static final Box2DComponent create(Sprite sprite){
-		Box2DComponent box2DComponent = new Box2DComponent();
-		
+	
+	private static final Body createBody(float x, float y){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(Pixels.toMeters(new Vector2(sprite.getX(), sprite.getY())));
+		bodyDef.position.set(Pixels.toMeters(new Vector2(x, y)));
 		bodyDef.fixedRotation = true;
 
-		Body body = Objects.WORLD.createBody(bodyDef);
-		
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(Pixels.toMeters(sprite.getScaleX() * sprite.getWidth() / 2), Pixels.toMeters(sprite.getScaleY() * sprite.getHeight() / 2));
-		
+		return Objects.WORLD.createBody(bodyDef);
+	}
+	
+	private static final Fixture createFixture(Body body, Shape shape){
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
 		
 		Fixture fixture = body.createFixture(fixtureDef);
 		
+		shape.dispose();
+		
+		return fixture;
+	}
+
+	public static final Box2DComponent create(Sprite sprite){
+		Box2DComponent box2DComponent = new Box2DComponent();
+
+		Body body = createBody(sprite.getX(), sprite.getY());
+		
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(Pixels.toMeters(sprite.getScaleX() * sprite.getWidth() / 2), Pixels.toMeters(sprite.getScaleY() * sprite.getHeight() / 2));
+	
+		Fixture fixture = createFixture(body, shape);
+		
 		box2DComponent.body = body;
 		box2DComponent.fixture = fixture;
 		
-		shape.dispose();
+		return box2DComponent;
+	}
+	
+	public static final Box2DComponent createCircle(Sprite sprite){
+		Box2DComponent box2DComponent = new Box2DComponent();
+
+		Body body = createBody(sprite.getX(), sprite.getY());
+		
+		CircleShape circle = new CircleShape();
+		circle.setRadius(sprite.getWidth());
+		
+		Fixture fixture = createFixture(body, circle);
+		
+		box2DComponent.body = body;
+		box2DComponent.fixture = fixture;
 
 		return box2DComponent;
 	}

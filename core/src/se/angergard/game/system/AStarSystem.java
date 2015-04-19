@@ -40,24 +40,16 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 	public void init() {
 		entities = new Array<Entity>();
 		pathArray = new Array<Entity>();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void addedToEngine(Engine engine) {
-		this.engine = engine;
 		
-		player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).first();
 		
 		engine.addEntityListener(new EntityListener(){
 
 			@Override
-			public void entityAdded(Entity entity) {				
+			public void entityAdded(Entity entity) {							
 				AStarComponent aiStarComponent = Objects.AI_STAR_MAPPER.get(entity);
 				if(aiStarComponent == null){
 					return;
 				}
-				
 				System.out.println("Let's start this show!");
 				entities.add(entity);
 			}
@@ -68,28 +60,17 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 		});
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addedToEngine(Engine engine) {
+		this.engine = engine;
+		
+		player = engine.getEntitiesFor(Family.getFor(PlayerComponent.class)).first();
+	}
+	
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
-		for(Entity entity : entities){
-			float speed = 100f * deltaTime;
-			
-			SpriteComponent spriteComponent = Objects.SPRITE_MAPPER.get(entity);
-			Sprite sprite = spriteComponent.sprite;
-			float xPos = sprite.getX();
-			float yPos = sprite.getY();
-			
-			Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(entity);
-			Body body = box2DComponent.body;
-			
-			AStarComponent aiStarComponent = Objects.AI_STAR_MAPPER.get(entity);
-			ImmutableArray<Node> path = aiStarComponent.path;
-
-			if(path == null){
-				continue;
-			}
-
-		}
 	}
 
 	
@@ -122,12 +103,12 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 			
 			if(!(path.size() > 0)) continue;
 			
-			for(int i = path.size() - 1; i > 0; i--){
-				Vector2i pos = path.get(i).position;
-				Entity pathEntity = EntityUtils.createEnemy(pos.x * 16, pos.y * 16);
-				this.pathArray.add(pathEntity);
-				engine.addEntity(pathEntity);
-			}
+//			for(int i = path.size() - 1; i > 0; i--){
+//				Vector2i pos = path.get(i).position;
+//				Entity pathEntity = EntityUtils.createEnemy(pos.x * 16, pos.y * 16);
+//				this.pathArray.add(pathEntity);
+//				engine.addEntity(pathEntity);
+//			}
 		
 			float speed = 1f;
 			
@@ -160,10 +141,7 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 					velocity.y -= speed;
 				}
 				
-				body.setLinearVelocity(velocity);
-
-				
-				
+				body.setLinearVelocity(velocity);				
 			}
 			
 			

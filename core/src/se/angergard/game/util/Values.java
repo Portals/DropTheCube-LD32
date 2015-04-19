@@ -23,15 +23,22 @@ public class Values {
 
 	public static final float REMOVE_FLOOR_TIME = 3;
 	
+//	public static final Color[] LIGHT_COLORS = new Color[]{
+//		new Color(52f / 255f, 152f / 255f, 219f / 255f, 1.0f),
+//		new Color(155f / 255f, 89f / 255f, 182f / 255f, 1.0f),
+//		new Color(231f / 255f, 76f / 255f, 60f / 255f, 1.0f),
+//		new Color(46f / 255f, 204f / 255f, 113f / 255f, 1.0f),
+//	};
+
 	public static final Color[] LIGHT_COLORS = new Color[]{
-		new Color(52f / 255f, 152f / 255f, 219f / 255f, 1.0f),
-		new Color(155f / 255f, 89f / 255f, 182f / 255f, 1.0f),
-		new Color(231f / 255f, 76f / 255f, 60f / 255f, 1.0f),
-		new Color(46f / 255f, 204f / 255f, 113f / 255f, 1.0f),
+		new Color(1, 0, 0, 1.0f),
+		new Color(0, 1, 0, 1.0f),
+		new Color(0, 1, 1, 1.0f),
+		new Color(0, 0, 1, 1.0f),
 	};
+	
+	public static final float POINT_LIGHT_DEFAULT_MAX_DISTANCE = 10f;
 
-	public static final float POINT_LIGHT_DEFAULT_MAX_DISTANCE = 30f;
-
-	public static final int POINT_LIGHT_DEFAULT_NUM_RAYS = 20;
+	public static final int POINT_LIGHT_DEFAULT_NUM_RAYS = 50;
 	
 }

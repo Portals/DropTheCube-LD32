@@ -13,6 +13,7 @@ import se.angergard.game.interfaces.Createable;
 import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Box2DUtils;
 import se.angergard.game.util.CameraSize;
+import se.angergard.game.util.EntityUtils;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Pixels;
 import se.angergard.game.util.Values;
@@ -32,8 +33,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 
 public class MapControllerSystem extends EntitySystem implements Initializable, Createable{
@@ -42,9 +49,10 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	private Entity player;
 	private TiledMap[] maps;
 	private OrthogonalTiledMapRenderer mapRenderer;
-	private boolean[][] solids; //for maps[0] atm
+	private boolean[][] solids;
 	private ImmutableArray<Body> tiledMapBodies;
 	private Array<Entity> pointLights;
+	private Array<Entity> enemies;
 
 	@Override
 	public void init() {
@@ -62,6 +70,33 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		mapRenderer = new OrthogonalTiledMapRenderer(maps[3]);
 		
 		pointLights = new Array<Entity>();
+		enemies = new Array<Entity>();
+		
+		
+		Objects.WORLD.setContactListener(new ContactListener(){
+
+			@Override
+			public void beginContact(Contact contact) {
+				contact.getFixtureA();
+				contact.getFixtureB();
+			}
+
+			@Override
+			public void endContact(Contact contact) {
+				
+			}
+
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) {
+				
+			}
+
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) {
+				
+			}
+			
+		});
 	}
 	
 	@Override
@@ -91,7 +126,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		}
 		
 		else if(yPos <= 5){
-			body.setTransform(Pixels.toMeters(CameraSize.getWidth() / 2), Pixels.toMeters(Values.TILED_SIZE_PIXELS), 0);
+			body.setTransform(Pixels.toMeters(CameraSize.getWidth() / 2), Pixels.toMeters(CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 2), 0);
 			loadMap(MathUtils.random(0, maps.length - 1));		
 		}
 		
@@ -120,15 +155,48 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			for(Entity pointLight : pointLights){
 				Objects.POINT_LIGHT_MAPPER.get(pointLight).pointLight.remove();
 			}
+			
+			//Removes all enemies
+			for(Entity enemy : enemies){
+				Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(enemy);
+				Objects.WORLD.destroyBody(box2DComponent.body);
+				
+				engine.removeEntity(enemy);
+			}
+			
 			pointLights.clear();
+			enemies.clear();
 		}
 		
 		initSolidTiles(maps[map]);
 		tiledMapBodies = Box2DUtils.create(maps[map]);
-		createLights(maps[map]);	
+		createLights(maps[map], map);	
 		mapRenderer.setMap(maps[map]);
+		spawnEnemies(maps[map]);
 	}
 	
+	private void spawnEnemies(TiledMap tiledMap) {
+		Array<Vector2> spawnpoints = new Array<Vector2>();
+		
+		MapLayer layer = tiledMap.getLayers().get("EnemySpawnPoints");
+		
+		Iterator<MapObject> it = layer.getObjects().iterator();
+		while(it.hasNext()){
+			MapObject object = it.next();
+			EllipseMapObject ellipseMapObject = (EllipseMapObject) object;
+			Ellipse ellipse = ellipseMapObject.getEllipse();
+			
+			spawnpoints.add(new Vector2(ellipse.x + ellipse.width / 2, ellipse.y + ellipse.height / 2));
+		}
+		
+		Vector2 vec = spawnpoints.get(MathUtils.random(0, spawnpoints.size - 1));
+		
+		Entity entity = EntityUtils.createEnemyAStar(vec.x, vec.y);
+		enemies.add(entity);
+		
+		engine.addEntity(entity);
+	}
+
 	private void initSolidTiles(TiledMap map){
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("CollisionTiles");
 		
@@ -151,7 +219,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	}
 	
 	
-	private void createLights(TiledMap tiledMap) {
+	private void createLights(TiledMap tiledMap, int map) {
 		MapLayer layer = tiledMap.getLayers().get("PointLights");
 		
 		Iterator<MapObject> it = layer.getObjects().iterator();
@@ -163,11 +231,11 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			Entity entity = new Entity();
 			
 			PointLightComponent pointComponent = new PointLightComponent();
-			pointComponent.color = Values.LIGHT_COLORS[MathUtils.random(0, Values.LIGHT_COLORS.length - 1)];
-			pointComponent.maxDistance = Values.POINT_LIGHT_DEFAULT_MAX_DISTANCE;
+			pointComponent.color = Values.LIGHT_COLORS[map];
+			pointComponent.maxDistance = ellipse.getEllipse().area() / 25;
 			pointComponent.numRays = Values.POINT_LIGHT_DEFAULT_NUM_RAYS;
-			pointComponent.x = ellipse.getEllipse().x;
-			pointComponent.y = ellipse.getEllipse().y;
+			pointComponent.x = ellipse.getEllipse().x + ellipse.getEllipse().width / 2;
+			pointComponent.y = ellipse.getEllipse().y + ellipse.getEllipse().height / 2;
 			
 			LightComponent lightComponent = new LightComponent();
 			lightComponent.lightType = LightType.PointLight;

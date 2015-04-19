@@ -7,6 +7,7 @@ import se.angergard.game.component.RemoveFloorComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.interfaces.Initializable;
 import se.angergard.game.util.Objects;
+import se.angergard.game.util.Values;
 import box2dLight.PointLight;
 
 import com.badlogic.ashley.core.Engine;
@@ -58,20 +59,28 @@ public class PlayerSystem extends EntitySystem implements Initializable{
 		}
 		body.setLinearVelocity(velocity);
 		
-		if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			sendRemoveFloorEntity();
+		if(Gdx.input.isKeyJustPressed(Keys.LEFT)){
+			sendRemoveFloorEntity(new Vector2(-Values.TILED_SIZE_PIXELS, 0));
 		}
-		
+		if(Gdx.input.isKeyJustPressed(Keys.RIGHT)){
+			sendRemoveFloorEntity(new Vector2(Values.TILED_SIZE_PIXELS, 0));	
+		}
+		if(Gdx.input.isKeyJustPressed(Keys.UP)){
+			sendRemoveFloorEntity(new Vector2(0, Values.TILED_SIZE_PIXELS));
+		}
+		if(Gdx.input.isKeyJustPressed(Keys.DOWN)){
+			sendRemoveFloorEntity(new Vector2(0, -Values.TILED_SIZE_PIXELS));
+		}
 	}
 	
-	private void sendRemoveFloorEntity(){
+	private void sendRemoveFloorEntity(Vector2 tileChange){
 		Sprite sprite = Objects.SPRITE_MAPPER.get(player).sprite;
 		Vector2 playerPosition = new Vector2(sprite.getX(), sprite.getY());
 		
 		Entity entity = new Entity();
 		
 		RemoveFloorComponent removeFloorComponent = new RemoveFloorComponent();
-		removeFloorComponent.playerPosition = playerPosition;
+		removeFloorComponent.playerPosition = playerPosition.add(tileChange);
 				
 		entity.add(removeFloorComponent);
 		
