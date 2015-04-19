@@ -67,7 +67,7 @@ public class EntityUtils {
 		SpriteComponent spriteComponent = new SpriteComponent();
 		Texture texture = new Texture(Gdx.files.internal("Player.png"));
 		Sprite sprite = new Sprite(texture);
-		sprite.setPosition(CameraSize.getWidth() / 4 - sprite.getWidth() / 2, CameraSize.getHeight() / 4 - sprite.getHeight() / 2);
+		sprite.setPosition(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 3, CameraSize.getHeight() / 2 - sprite.getHeight());
 		sprite.setScale(1.5f);
 		spriteComponent.sprite = sprite;
 		

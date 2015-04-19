@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="121">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="186">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
@@ -14,44 +14,74 @@
   </data>
  </layer>
  <objectgroup color="#0000ff" name="PointLights">
-  <object id="83" x="48" y="80" width="32" height="32">
+  <object id="161" x="144" y="240" width="112" height="16">
    <ellipse/>
   </object>
-  <object id="84" x="160" y="80" width="32" height="32">
+  <object id="162" x="0" y="240" width="112" height="16">
    <ellipse/>
   </object>
-  <object id="86" x="160" y="160" width="32" height="32">
+  <object id="163" x="0" y="0" width="112" height="16">
    <ellipse/>
   </object>
-  <object id="87" x="48" y="144" width="32" height="32">
+  <object id="164" x="144" y="0" width="112" height="16">
    <ellipse/>
   </object>
-  <object id="100" x="16" y="16" width="32" height="32">
+  <object id="165" x="240" y="16" width="16" height="96">
    <ellipse/>
   </object>
-  <object id="101" x="208" y="16" width="32" height="32">
+  <object id="166" x="240" y="144" width="16" height="96">
    <ellipse/>
   </object>
-  <object id="102" x="208" y="208" width="32" height="32">
+  <object id="167" x="0" y="144" width="16" height="96">
    <ellipse/>
   </object>
-  <object id="103" x="16" y="208" width="32" height="32">
+  <object id="168" x="0" y="16" width="16" height="96">
    <ellipse/>
   </object>
-  <object id="104" x="112" y="0" width="32" height="16">
+  <object id="169" x="192" y="64" width="16" height="144">
    <ellipse/>
   </object>
-  <object id="105" x="0" y="112" width="16" height="32">
+  <object id="170" x="48" y="192" width="144" height="16">
    <ellipse/>
   </object>
-  <object id="106" x="240" y="112" width="16" height="32">
+  <object id="172" x="32" y="64" width="16" height="48">
    <ellipse/>
   </object>
-  <object id="107" x="112" y="240" width="32" height="16">
+  <object id="173" x="48" y="64" width="32" height="16">
+   <ellipse/>
+  </object>
+  <object id="174" x="32" y="144" width="16" height="48">
+   <ellipse/>
+  </object>
+  <object id="176" x="80" y="112" width="16" height="32">
+   <ellipse/>
+  </object>
+  <object id="177" x="160" y="112" width="16" height="32">
+   <ellipse/>
+  </object>
+  <object id="178" x="112" y="64" width="32" height="16">
+   <ellipse/>
+  </object>
+  <object id="179" x="112" y="176" width="32" height="16">
+   <ellipse/>
+  </object>
+  <object id="180" x="48" y="176" width="32" height="16">
+   <ellipse/>
+  </object>
+  <object id="182" x="0" y="80" width="16" height="96">
+   <ellipse/>
+  </object>
+  <object id="183" x="80" y="0" width="96" height="16">
+   <ellipse/>
+  </object>
+  <object id="184" x="240" y="80" width="16" height="96">
+   <ellipse/>
+  </object>
+  <object id="185" x="80" y="240" width="96" height="16">
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup color="#ff0000" name="Collision">
+ <objectgroup color="#ff0000" name="Collision" visible="0">
   <object id="75" x="16" y="112">
    <polyline points="0,0 0,-96 96,-96 96,-112 128,-112 128,-96 224,-96 224,0 240,0 240,32 224,32 224,128 128,128 128,144 96,144 96,128 0,128 0,32 -16,32 -16,0 0,0"/>
   </object>
@@ -67,29 +97,26 @@
   <object id="79" x="80" y="112" width="16" height="32"/>
   <object id="81" x="160" y="112" width="16" height="32"/>
  </objectgroup>
- <objectgroup color="#ffff00" name="EnemySpawnPoints">
-  <object id="112" x="129" y="95.5">
+ <objectgroup color="#ffff00" name="EnemySpawnPoints" visible="0">
+  <object id="121" x="178" y="177.5">
    <ellipse/>
   </object>
-  <object id="113" x="129" y="161">
+  <object id="122" x="156" y="158">
    <ellipse/>
   </object>
-  <object id="114" x="68" y="126.5">
+  <object id="124" x="110" y="127">
    <ellipse/>
   </object>
-  <object id="115" x="200" y="51">
+  <object id="125" x="135" y="124.5">
    <ellipse/>
   </object>
-  <object id="117" x="45.5" y="52.5">
+  <object id="126" x="124" y="149">
    <ellipse/>
   </object>
-  <object id="118" x="204" y="219">
+  <object id="127" x="101" y="164.5">
    <ellipse/>
   </object>
-  <object id="119" x="93.5" y="179.5">
-   <ellipse/>
-  </object>
-  <object id="120" x="35" y="203.5">
+  <object id="128" x="169" y="95.5">
    <ellipse/>
   </object>
  </objectgroup>

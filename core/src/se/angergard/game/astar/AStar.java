@@ -106,6 +106,18 @@ public class AStar {
 	}
 	
 	public static boolean isSolid(int x, int y){
+		if(x < 0){
+			return true;
+		}
+		if(y < 0){
+			return true;
+		}
+		if(x >= 16){
+			return true;
+		}
+		if(y >= 16){
+			return true;
+		}
 		return solids[x][y];
 	}
 	

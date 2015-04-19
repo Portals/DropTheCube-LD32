@@ -6,6 +6,7 @@ import se.angergard.game.util.BasicGUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -21,6 +22,8 @@ public class MainMenuScreen extends BasicGUI implements Screen{
 	public void show() {
 		super.init();
 		
+		Label label = new Label("   DropTheCube", labelStyle);
+		
 		TextButton play = new TextButton("Play", blueTextButtonStyle);
 		TextButton help = new TextButton("Help", blueTextButtonStyle);
 		TextButton exit = new TextButton("Exit", blueTextButtonStyle);
@@ -29,9 +32,10 @@ public class MainMenuScreen extends BasicGUI implements Screen{
 		help.addListener(getHelpListener());
 		exit.addListener(getExitListener());
 		
-		mainTable.add(play).pad(50).row();
-		mainTable.add(help).pad(50).row();
-		mainTable.add(exit).pad(50).row();
+		mainTable.add(label).pad(20).width(400).height(50).row();
+		mainTable.add(play).pad(20).width(400).height(50).row();
+		mainTable.add(help).pad(20).width(400).height(50).row();
+		mainTable.add(exit).pad(20).width(400).height(50).row();
 	}
 
 	@Override

@@ -71,6 +71,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	private Array<Entity> enemies;
 	private RunnablePool runnablePool;
 	private boolean alreadyHurted = false;
+	private int lastGate = -1;
 
 	@Override
 	public void init() {
@@ -142,7 +143,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	
 	@Override
 	public void create() {
-		loadMap(0, new Vector2(CameraSize.getWidth() / 2 - 8, CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 3));
+		loadMap(0, new Vector2(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 3, CameraSize.getHeight() / 2 - 16));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -162,19 +163,23 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 
 		Vector2 newPosition = null;
 		
-		if(xPos <= 5){
+		if(xPos <= 5 && lastGate != 1){
+			lastGate = 3;
 			newPosition = new Vector2(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 3, CameraSize.getHeight() / 2 - sprite.getHeight());
 		}
 		
-		else if(yPos <= 5){
+		else if(yPos <= 5 && lastGate != 2){
+			lastGate = 0;
 			newPosition = new Vector2(CameraSize.getWidth() / 2 - sprite.getWidth() / 2, CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 3);
 		}
 		
-		else if(xPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
+		else if(xPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS && lastGate != 3){
+			lastGate = 1;
 			newPosition = new Vector2(Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2 - sprite.getHeight() / 2);
 		}
 		
-		else if(yPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
+		else if(yPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS && lastGate != 0){
+			lastGate = 2;
 			newPosition = new Vector2(CameraSize.getWidth() / 2 - sprite.getWidth() / 2, Values.TILED_SIZE_PIXELS * 2);
 		}
 		
@@ -234,6 +239,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			}
 									
 			pointLights.clear();
+			enemies.clear();
 			
 			Objects.world = new World(new Vector2(0, 0), false);
 			
@@ -317,7 +323,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			
 			PointLightComponent pointComponent = new PointLightComponent();
 			pointComponent.color = Values.LIGHT_COLORS[map];
-			pointComponent.maxDistance = ellipse.getEllipse().area() / 25;
+			pointComponent.maxDistance = (float)Math.sqrt((double)ellipse.getEllipse().area());
 			pointComponent.numRays = Values.POINT_LIGHT_DEFAULT_NUM_RAYS;
 			pointComponent.x = ellipse.getEllipse().x + ellipse.getEllipse().width / 2;
 			pointComponent.y = ellipse.getEllipse().y + ellipse.getEllipse().height / 2;
@@ -343,7 +349,8 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		Rectangle playerRectangle = playerSpriteComponent.sprite.getBoundingRectangle();
 		playerRectangle.set(playerRectangle.x - 1, playerRectangle.y - 1, playerRectangle.width + 2, playerRectangle.height + 2);
 		
-		for(Entity enemy : enemies){
+		for(int i = 0; i < enemies.size; i++){
+			Entity enemy = enemies.get(i);
 			SpriteComponent enemySpriteComponent = Objects.SPRITE_MAPPER.get(enemy);
 			Sprite enemySprite = enemySpriteComponent.sprite;
 			
@@ -380,7 +387,8 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		
 		Array<Entity> enemiesToRemove = new Array<Entity>();
 
-		for(Entity enemy : enemies){
+		for(int i = 0; i < enemies.size; i++){
+			Entity enemy = enemies.get(i);
 			SpriteComponent enemySpriteComponent = Objects.SPRITE_MAPPER.get(enemy);
 			Sprite enemySprite = enemySpriteComponent.sprite;
 			
@@ -410,24 +418,14 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	}
 	
 	private void removeAllEnemies(){
-		runnablePool.add(new Runnable(){
-			@Override
-			public void run() {
-				if(Objects.world.isLocked()){
-					runnablePool.add(this);
-					return;
-				}
-				//Removes all enemies
-				for(Entity enemy : enemies){
-					Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(enemy);
-					Box2DUtils.destroyBody(box2DComponent);
+		//Removes all enemies
+		for(Entity enemy : enemies){
+			Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(enemy);
+			Box2DUtils.destroyBody(box2DComponent);
 					
-					engine.removeEntity(enemy);
-				}
-				enemies.clear();
-			}
-		});
-
+			engine.removeEntity(enemy);
+		}
+		enemies.clear();
 	}
 	
 }

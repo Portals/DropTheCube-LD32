@@ -32,7 +32,7 @@ public class Objects {
 	public static final ComponentMapper<Box2DComponent> BOX2D_MAPPER = ComponentMapper.getFor(Box2DComponent.class);
 	public static final ComponentMapper<RemoveFloorComponent> REMOVE_FLOOR_MAPPER = ComponentMapper.getFor(RemoveFloorComponent.class);
 	public static final ComponentMapper<RemoveEntityTimerComponent> REMOVE_ENTITY_TIMER_MAPPER = ComponentMapper.getFor(RemoveEntityTimerComponent.class);;
-	public static final ComponentMapper<AStarComponent> AI_STAR_MAPPER = ComponentMapper.getFor(AStarComponent.class);
+	public static final ComponentMapper<AStarComponent> A_STAR_MAPPER = ComponentMapper.getFor(AStarComponent.class);
 	public static final ComponentMapper<HealthComponent> HEALTH_MAPPER = ComponentMapper.getFor(HealthComponent.class);
 	public static final ComponentMapper<ScoreComponent> SCORE_MAPPER = ComponentMapper.getFor(ScoreComponent.class);
 	public static final ComponentMapper<SpeedComponent> SPEED_MAPPER = ComponentMapper.getFor(SpeedComponent.class);

@@ -1,6 +1,5 @@
 package se.angergard.game.system;
 
-import se.angergard.game.Health;
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.HoleComponent;
 import se.angergard.game.component.PlayerComponent;
@@ -48,7 +47,7 @@ public class PlayerSystem extends IntervalSystem implements Initializable{
 		Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(player);
 		Body body = box2DComponent.body;
 		
-		float speed = 100f * deltaTime;
+		float speed = 110f * deltaTime;
 		Vector2 velocity = new Vector2();
 		
 		if(Gdx.input.isKeyPressed(Keys.W)){

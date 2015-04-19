@@ -47,7 +47,7 @@ public class DrawPossibleFloorPlacementsSystem extends IntervalSystem implements
 		}
 		
 		Objects.BATCH.setProjectionMatrix(Objects.camera.combined);
-		Objects.BATCH.setColor(new Color(1.0f, 1.0f, 1.0f, 0.3f));
+		Objects.BATCH.setColor(new Color(0.0f, 0.0f, 1.0f, 0.6f));
 		Objects.BATCH.begin();
 		
 		for(int i = 1; i < 8; i += 2){

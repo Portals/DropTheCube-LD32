@@ -46,7 +46,7 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 
 			@Override
 			public void entityAdded(Entity entity) {							
-				AStarComponent aiStarComponent = Objects.AI_STAR_MAPPER.get(entity);
+				AStarComponent aiStarComponent = Objects.A_STAR_MAPPER.get(entity);
 				if(aiStarComponent == null){
 					return;
 				}
@@ -70,12 +70,21 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
+		for(Entity entity : entities){
+			AStarComponent aStarComponent = Objects.A_STAR_MAPPER.get(entity);
+			aStarComponent.cooldown -= deltaTime;
+		}
 	}
 
 	
 	@Override
 	protected void updateInterval() {		
 		for(Entity entity : entities){
+			AStarComponent aStarComponent = Objects.A_STAR_MAPPER.get(entity);
+			if(aStarComponent.cooldown > 0){
+				continue;
+			}
+			
 			SpriteComponent playerSpriteComponent = Objects.SPRITE_MAPPER.get(player);
 			int xPlayer = (int)(playerSpriteComponent.sprite.getX() + playerSpriteComponent.sprite.getWidth() / 2);
 			int yPlayer = (int)(playerSpriteComponent.sprite.getY() + playerSpriteComponent.sprite.getHeight() / 2);
@@ -87,9 +96,8 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 			Vector2i start = new Vector2i(xEnemy / Values.TILED_SIZE_PIXELS, yEnemy / Values.TILED_SIZE_PIXELS);
 			Vector2i goal = new Vector2i(xPlayer / Values.TILED_SIZE_PIXELS, yPlayer / Values.TILED_SIZE_PIXELS);
 
-			AStarComponent aiStarComponent = Objects.AI_STAR_MAPPER.get(entity);
 			ImmutableArray<Node> path = AStar.findPath(start, goal);;
-			aiStarComponent.path = path;
+			aStarComponent.path = path;
 			
 			if(this.pathArray.size != 0){
 				for(Entity e : pathArray){
@@ -101,17 +109,9 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 			if(path == null) continue;
 			
 			if(!(path.size() > 0)) {
-				System.out.println("PathSize : 0");
 				continue;
 			}
 			
-//			for(int i = path.size() - 1; i > 0; i--){
-//				Vector2i pos = path.get(i).position;
-//				Entity pathEntity = EntityUtils.createEnemy(pos.x * 16, pos.y * 16);
-//				this.pathArray.add(pathEntity);
-//				engine.addEntity(pathEntity);
-//			}
-		
 			SpeedComponent speedComponent = Objects.SPEED_MAPPER.get(entity);
 			float speed = speedComponent.speed;
 			
@@ -122,7 +122,6 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 			
 			Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(entity);
 			Body body = box2DComponent.body;
-			
 			
 			if(path.size() > 0){
 				Vector2i vec = path.get(path.size() - 1).position; //size - 1 because the findPath returns the path in wrong order.

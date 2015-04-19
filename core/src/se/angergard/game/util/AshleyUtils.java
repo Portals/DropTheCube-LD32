@@ -1,6 +1,5 @@
 package se.angergard.game.util;
 
-import se.angergard.game.component.HoleComponent;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;

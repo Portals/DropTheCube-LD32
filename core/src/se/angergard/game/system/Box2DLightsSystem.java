@@ -36,7 +36,6 @@ public class Box2DLightsSystem extends EntitySystem implements Initializable{
 		rayHandler.updateAndRender();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void addedToEngine(final Engine engine) { 
 		engine.addEntityListener(new EntityListener(){
