@@ -64,7 +64,7 @@ public class HelpScreen extends BasicGUI implements Screen{
 					 +"AKA PortalProgramming\n"
 					 +"Source at:\n"
 					 +"github.com/Portals/\n"
-					 +"Ludumdare32");
+					 +"DropTheCube-LD32");
 		label.setFontScale(0.6f);
 		
 		mainTable.add(label).padBottom(10).row();

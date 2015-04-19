@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		config.width = 512;
 		config.height = 512;
 		config.resizable = false;
+		config.title = "Drop The Cube - Ludumdare 32";
 		new LwjglApplication(new MainGame(), config);
 	}
 }
