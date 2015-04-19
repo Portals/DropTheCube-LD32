@@ -13,8 +13,8 @@ public class Health {
 		health -= damage;
 	}
 	
-	public boolean dead(){
-		return health > 0;
+	public boolean isDead(){
+		return health <= 0;
 	}
 	
 	public void reset(){

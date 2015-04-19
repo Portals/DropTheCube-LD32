@@ -2,22 +2,25 @@ package se.angergard.game.system;
 
 import java.util.Iterator;
 
+import se.angergard.game.MainGame;
 import se.angergard.game.astar.AStar;
 import se.angergard.game.component.Box2DComponent;
+import se.angergard.game.component.HealthComponent;
 import se.angergard.game.component.HoleComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.PointLightComponent;
+import se.angergard.game.component.ScoreComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.enums.LightType;
 import se.angergard.game.interfaces.Createable;
 import se.angergard.game.interfaces.Initializable;
+import se.angergard.game.screen.GameFinished;
 import se.angergard.game.util.AshleyUtils;
 import se.angergard.game.util.Box2DUtils;
 import se.angergard.game.util.CameraSize;
 import se.angergard.game.util.EntityUtils;
 import se.angergard.game.util.Objects;
-import se.angergard.game.util.Pixels;
 import se.angergard.game.util.RunnablePool;
 import se.angergard.game.util.Values;
 
@@ -28,7 +31,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -41,6 +43,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -52,7 +55,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class MapControllerSystem extends EntitySystem implements Initializable, Createable{
+	
+	public MapControllerSystem(MainGame game){ //Because MapControllerSystem checks alot of things
+		this.game = game;
+	}
 
+	private MainGame game;
 	private Engine engine;
 	private Entity player;
 	private TiledMap[] maps;
@@ -62,6 +70,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	private Array<Entity> pointLights;
 	private Array<Entity> enemies;
 	private RunnablePool runnablePool;
+	private boolean alreadyHurted = false;
 
 	@Override
 	public void init() {
@@ -83,14 +92,14 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		
 		runnablePool = new RunnablePool();
 		
-		Objects.WORLD.setContactListener(new ContactListener(){
+		Objects.world.setContactListener(new ContactListener(){
 
 			@Override
 			public void beginContact(final Contact contact) {
 				runnablePool.add(new Runnable(){
 					@Override
 					public void run() {
-						if(Objects.WORLD.isLocked()){
+						if(Objects.world.isLocked()){
 							runnablePool.add(this);
 							return;
 						}
@@ -154,19 +163,19 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		Vector2 newPosition = null;
 		
 		if(xPos <= 5){
-			newPosition = new Vector2(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2);
+			newPosition = new Vector2(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 3, CameraSize.getHeight() / 2 - sprite.getHeight());
 		}
 		
 		else if(yPos <= 5){
-			newPosition = new Vector2(CameraSize.getWidth() / 2, CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 2);
+			newPosition = new Vector2(CameraSize.getWidth() / 2 - sprite.getWidth() / 2, CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 3);
 		}
 		
 		else if(xPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
-			newPosition = new Vector2(Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2);
+			newPosition = new Vector2(Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2 - sprite.getHeight() / 2);
 		}
 		
 		else if(yPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
-			newPosition = new Vector2(CameraSize.getWidth() / 2, Values.TILED_SIZE_PIXELS * 2);
+			newPosition = new Vector2(CameraSize.getWidth() / 2 - sprite.getWidth() / 2, Values.TILED_SIZE_PIXELS * 2);
 		}
 		
 		final Vector2 newPosition2 = newPosition;
@@ -175,7 +184,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			runnablePool.add(new Runnable(){
 				@Override
 				public void run() {
-					if(!Objects.WORLD.isLocked()){
+					if(!Objects.world.isLocked()){
 						loadMap(MathUtils.random(0, maps.length - 1), newPosition2);				
 					}
 					else{
@@ -185,13 +194,16 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			});
 		}
 		
-		mapRenderer.setView(Objects.CAMERA);
+		mapRenderer.setView(Objects.camera);
 		mapRenderer.render();
 		
 		runnablePool.run();
 	}
 		
 	private void loadMap(int map, Vector2 newPosition){
+		ScoreComponent scoreComponent = Objects.SCORE_MAPPER.get(player);
+		scoreComponent.levels += 1;
+		alreadyHurted = false;
 		if(tiledMapBodies != null){//Map has been changed
 			//Destroy old Player
 			Box2DComponent playerPox2DComponent = Objects.BOX2D_MAPPER.get(player);
@@ -206,15 +218,11 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			for(Entity pointLight : pointLights){
 				Objects.POINT_LIGHT_MAPPER.get(pointLight).pointLight.remove();
 			}
-			
-			//Removes all enemies
-			for(Entity enemy : enemies){
-				Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(enemy);
-				Box2DUtils.destroyBody(box2DComponent);
-				
-				engine.removeEntity(enemy);
+
+			if(enemies.size != 0){
+				removeAllEnemies();				
 			}
-			
+
 			if(AshleyUtils.entityWithComponentExist(engine, HoleComponent.class)){
 				@SuppressWarnings("unchecked")
 				Entity entity = engine.getEntitiesFor(Family.getFor(HoleComponent.class)).first();
@@ -224,15 +232,11 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 				
 				engine.removeEntity(entity);
 			}
-						
-			System.out.println("Body count: " + Objects.WORLD.getBodyCount());
-			
+									
 			pointLights.clear();
-			enemies.clear();
 			
-			Objects.WORLD = new World(new Vector2(0, 0), false);
+			Objects.world = new World(new Vector2(0, 0), false);
 			
-			System.out.println("Welcome, to the new World!");
 			SpriteComponent playerSpriteComponent = Objects.SPRITE_MAPPER.get(player);
 			playerSpriteComponent.sprite.setPosition(newPosition.x, newPosition.y);
 			
@@ -246,10 +250,10 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		tiledMapBodies = Box2DUtils.create(maps[map]);
 		createLights(maps[map], map);	
 		mapRenderer.setMap(maps[map]);
-		spawnEnemies(maps[map]);
+		spawnEnemies(maps[map], scoreComponent.levels);
 	}
 	
-	private void spawnEnemies(TiledMap tiledMap) {
+	private void spawnEnemies(TiledMap tiledMap, int level) {
 		Array<Vector2> spawnpoints = new Array<Vector2>();
 		
 		MapLayer layer = tiledMap.getLayers().get("EnemySpawnPoints");
@@ -325,11 +329,36 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	}
 
 	private void checkCollision(){
+		//Checks player and enemies
+		
+		ScoreComponent scoreComponent = Objects.SCORE_MAPPER.get(player);
+		SpriteComponent playerSpriteComponent = Objects.SPRITE_MAPPER.get(player);
+		Rectangle playerRectangle = playerSpriteComponent.sprite.getBoundingRectangle();
+		playerRectangle.set(playerRectangle.x - 1, playerRectangle.y - 1, playerRectangle.width + 2, playerRectangle.height + 2);
+		
+		for(Entity enemy : enemies){
+			SpriteComponent enemySpriteComponent = Objects.SPRITE_MAPPER.get(enemy);
+			Sprite enemySprite = enemySpriteComponent.sprite;
+			
+			//Checks if the player has touched any enemy
+			if(!alreadyHurted && Intersector.overlaps(playerRectangle, enemySprite.getBoundingRectangle())){
+				alreadyHurted = true;
+				HealthComponent healthComponent = Objects.HEALTH_MAPPER.get(player);
+				healthComponent.health.hurt(1);
+				if(healthComponent.health.isDead()){
+					game.setScreen(new GameFinished(game, "You died,\nScore:")); //TODO: Add score
+				}
+				else{
+					removeAllEnemies();
+				}
+			}
+		}
+
+		
 		@SuppressWarnings("unchecked")
 		ImmutableArray<Entity> potentiallyHoleArray = engine.getEntitiesFor(Family.getFor(HoleComponent.class));
 		
 		if(potentiallyHoleArray.size() == 0){
-			System.out.println("No hole found");
 			return;
 		}
 		
@@ -338,10 +367,10 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		SpriteComponent holeSpriteComponent = Objects.SPRITE_MAPPER.get(hole);
 		Sprite holeSprite = holeSpriteComponent.sprite;
 		
-		Circle circle = new Circle(holeSprite.getX() + holeSprite.getWidth() / 2, holeSprite.getY() + holeSprite.getHeight() / 2, holeSprite.getWidth() / 2 + 1);
+		Circle circle = new Circle(holeSprite.getX() + holeSprite.getWidth() / 2, holeSprite.getY() + holeSprite.getHeight() / 2, holeSprite.getWidth() / 2);
 		
 		Array<Entity> enemiesToRemove = new Array<Entity>();
-		
+
 		for(Entity enemy : enemies){
 			SpriteComponent enemySpriteComponent = Objects.SPRITE_MAPPER.get(enemy);
 			Sprite enemySprite = enemySpriteComponent.sprite;
@@ -351,6 +380,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 				engine.removeEntity(enemy);
 				Box2DUtils.destroyBody(enemyBox2DComponent);
 				enemiesToRemove.add(enemy);
+				scoreComponent.score += 1;
 			}
 		}
 		
@@ -360,6 +390,35 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		
 		enemiesToRemove.clear();
 		
+		//Checks if player fell in the hole
+		
+		playerRectangle = playerSpriteComponent.sprite.getBoundingRectangle(); //Recreates it to be bigger, or else collision is weird;
+		playerRectangle.set(playerRectangle.x + 6, playerRectangle.y + 6, playerRectangle.width - 12, playerRectangle.height - 12);
+		
+		if(Intersector.overlaps(circle, playerRectangle)){
+			game.setScreen(new GameFinished(game, "You fell into \nyour own hole.\nNo score for you..."));
+		}
+	}
+	
+	private void removeAllEnemies(){
+		runnablePool.add(new Runnable(){
+			@Override
+			public void run() {
+				if(Objects.world.isLocked()){
+					runnablePool.add(this);
+					return;
+				}
+				//Removes all enemies
+				for(Entity enemy : enemies){
+					Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(enemy);
+					Box2DUtils.destroyBody(box2DComponent);
+					
+					engine.removeEntity(enemy);
+				}
+				enemies.clear();
+			}
+		});
+
 	}
 	
 }

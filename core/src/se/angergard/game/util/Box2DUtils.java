@@ -31,7 +31,7 @@ public class Box2DUtils {
 		bodyDef.position.set(Pixels.toMeters(new Vector2(x + width / 2, y + height / 2)));
 		bodyDef.fixedRotation = true;
 
-		return Objects.WORLD.createBody(bodyDef);
+		return Objects.world.createBody(bodyDef);
 	}
 	
 	private static final Fixture createFixture(Body body, Shape shape){
@@ -103,7 +103,7 @@ public class Box2DUtils {
 				bodyDef.type = BodyType.StaticBody;
 				bodyDef.position.set(Pixels.toMeters(new Vector2(rect.x + rect.width / 2, rect.y + rect.height / 2)));
 				
-				Body body = Objects.WORLD.createBody(bodyDef);
+				Body body = Objects.world.createBody(bodyDef);
 				FixtureDef fixtureDef = new FixtureDef();
 				fixtureDef.friction = 0;
 				fixtureDef.density = 1;
@@ -129,7 +129,7 @@ public class Box2DUtils {
 			BodyDef bodyDef = new BodyDef();
 			bodyDef.type = BodyType.StaticBody;
 			
-			Body body = Objects.WORLD.createBody(bodyDef);
+			Body body = Objects.world.createBody(bodyDef);
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.friction = 0;
 			fixtureDef.density = 1;
@@ -196,20 +196,17 @@ public class Box2DUtils {
 		}
 		
 		Array<Body> bodies = new Array<Body>();
-		Objects.WORLD.getBodies(bodies);
+		Objects.world.getBodies(bodies);
 		
 		if(bodies.size == 0){
-			System.out.println("No bodies exist to destroy");
 		}
 		
 		for(Body body : bodies){
 			if(body == bodyToDestroy){
-				Objects.WORLD.destroyBody(body);
+				Objects.world.destroyBody(body);
 				return;
 			}
-		}
-		
-		System.out.println("Couldn't destroy this body, it doesn't exist...");
+		} 
 	}
 
 //	private static PolygonShape getRectangle(RectangleMapObject object) {

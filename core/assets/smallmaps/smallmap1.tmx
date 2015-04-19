@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="73">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="74">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
  <layer name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYMANWKCYEGAiEyPrJxVg00+KvbTUz0AEnxj96ACbfhY8bsSmFxmzUEE/pe7Hp5/c8Buo+CcFYPMXufkHFyAm/wIARl4BIQ==
+   eJxjYMANWKCYEGAiE6PrJwVg00+KvbTUj8tf+PRjU4/Nz+j6WfC4EZteZMxCBf2Uuh+ffnLDj5z4o4Z+UgAl6Y/Y/EJM/gUAXx4BKQ==
   </data>
  </layer>
  <layer name="CollisionTiles" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYMSBYQCXPLo6UgGyfnQzmdAwNjvR2aTYS0v9uMIPn34mLOpxhTMTkjp8bqQkjojVT6n7qRV+gyH+KUm/5ABi8yU+NQANFwCF
+   eJxjZGBgYMSBYQCXPLo6UgE+e5jQMDY7ybWf1vpx+QuffiYs6nGFMxOSOnxupCSOiNVPqfuRwwJdPz4+Pv2EAK300yv9IruDmHyJTw0AALcAgQ==
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Collision">
@@ -19,9 +19,6 @@
   </object>
   <object id="35" x="80" y="80">
    <polyline points="0,0 32,0 32,16 64,16 64,0 96,0 96,32 80,32 80,64 96,64 96,96 64,96 64,80 16,80 32,80 32,96 0,96 0,64 16,64 16,32 0,32 0,0"/>
-  </object>
-  <object id="60" x="32" y="32">
-   <polyline points="0,0 64,0 64,16 16,16 16,64 0,64 0,0"/>
   </object>
   <object id="61" x="160" y="32">
    <polyline points="0,0 64,0 64,64 48,64 48,16 0,16"/>
@@ -35,6 +32,7 @@
   <object id="72" x="160" y="32">
    <polyline points="0,0 0,16"/>
   </object>
+  <object id="73" x="48" y="32" width="48" height="16"/>
  </objectgroup>
  <objectgroup color="#0000ff" name="PointLights">
   <object id="44" x="0" y="111.667" width="16" height="32">

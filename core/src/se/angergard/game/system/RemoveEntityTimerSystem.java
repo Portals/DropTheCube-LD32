@@ -10,6 +10,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 
 public class RemoveEntityTimerSystem extends EntitySystem implements Initializable{
@@ -24,11 +25,12 @@ public class RemoveEntityTimerSystem extends EntitySystem implements Initializab
 		entitiesToRemove = new Array<Entity>();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 		
-		engine.addEntityListener(new EntityListener(){
+		engine.addEntityListener(Family.getFor(RemoveEntityTimerComponent.class), new EntityListener(){
 
 			@Override
 			public void entityAdded(Entity entity) {

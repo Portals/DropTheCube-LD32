@@ -79,7 +79,7 @@ public class AStar {
 				double hCost = a.length(goal);
 				Node node = new Node(a, current, gCost, hCost);
 				
-				if(vecInList(closedList, a) && gCost >= node.gCost){ //Or current?
+				if(vecInList(closedList, a) && gCost >= node.gCost){
 					continue;
 				}
 				if(!vecInList(openList, a) || gCost < node.gCost){
@@ -103,6 +103,10 @@ public class AStar {
 			}
 		}
 		return false;
+	}
+	
+	public static boolean isSolid(int x, int y){
+		return solids[x][y];
 	}
 	
 }

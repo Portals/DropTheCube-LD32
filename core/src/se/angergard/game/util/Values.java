@@ -19,9 +19,9 @@ public class Values {
 	public static final boolean SHADOWS = true;
 	public static final Color AMBIENT_LIGHT = Color.WHITE;
 
-	public static final float AMBIENT_LIGHT_BRIGHTNESS = 0.06f;
+	public static final float AMBIENT_LIGHT_BRIGHTNESS = 0.065f;
 
-	public static final float REMOVE_FLOOR_TIME = 3;
+	public static final float REMOVE_FLOOR_TIME = 3f;
 	
 //	public static final Color[] LIGHT_COLORS = new Color[]{
 //		new Color(52f / 255f, 152f / 255f, 219f / 255f, 1.0f),

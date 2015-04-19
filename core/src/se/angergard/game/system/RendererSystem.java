@@ -29,7 +29,7 @@ public class RendererSystem extends IteratingSystem implements Initializable{
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);		
-		Objects.BATCH.setProjectionMatrix(Objects.CAMERA.combined);
+		Objects.BATCH.setProjectionMatrix(Objects.camera.combined);
 		Objects.BATCH.begin();
 		
 		for(Sprite sprite : renderQueue){

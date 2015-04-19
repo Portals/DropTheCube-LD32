@@ -24,7 +24,7 @@ public class Box2DLightsSystem extends EntitySystem implements Initializable{
 	
 	@Override
 	public void init() {
-		rayHandler = new RayHandler(Objects.WORLD);
+		rayHandler = new RayHandler(Objects.world);
 		rayHandler.setShadows(Values.SHADOWS);
 		rayHandler.setAmbientLight(Values.AMBIENT_LIGHT);
 		rayHandler.setAmbientLight(Values.AMBIENT_LIGHT_BRIGHTNESS);
@@ -32,7 +32,7 @@ public class Box2DLightsSystem extends EntitySystem implements Initializable{
 		
 	@Override
 	public void update(float deltaTime) {
-		rayHandler.setCombinedMatrix(Objects.CAMERA.combined);
+		rayHandler.setCombinedMatrix(Objects.camera.combined);
 		rayHandler.updateAndRender();
 	}
 	

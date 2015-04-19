@@ -76,13 +76,13 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 	@Override
 	protected void updateInterval() {		
 		for(Entity entity : entities){
-			SpriteComponent playerSpriteCompoennt = Objects.SPRITE_MAPPER.get(player);
-			int xPlayer = (int)playerSpriteCompoennt.sprite.getX();
-			int yPlayer = (int)playerSpriteCompoennt.sprite.getY();
+			SpriteComponent playerSpriteComponent = Objects.SPRITE_MAPPER.get(player);
+			int xPlayer = (int)(playerSpriteComponent.sprite.getX() + playerSpriteComponent.sprite.getWidth() / 2);
+			int yPlayer = (int)(playerSpriteComponent.sprite.getY() + playerSpriteComponent.sprite.getHeight() / 2);
 			
 			SpriteComponent enemySpriteComponent = Objects.SPRITE_MAPPER.get(entity);
-			int xEnemy = (int)enemySpriteComponent.sprite.getX();
-			int yEnemy = (int)enemySpriteComponent.sprite.getY();
+			int xEnemy = (int)(enemySpriteComponent.sprite.getX() + enemySpriteComponent.sprite.getWidth() / 2);
+			int yEnemy = (int)(enemySpriteComponent.sprite.getY() + enemySpriteComponent.sprite.getHeight() / 2);
 			
 			Vector2i start = new Vector2i(xEnemy / Values.TILED_SIZE_PIXELS, yEnemy / Values.TILED_SIZE_PIXELS);
 			Vector2i goal = new Vector2i(xPlayer / Values.TILED_SIZE_PIXELS, yPlayer / Values.TILED_SIZE_PIXELS);

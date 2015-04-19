@@ -10,6 +10,8 @@ import se.angergard.game.component.HealthComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.PointLightComponent;
+import se.angergard.game.component.ScoreComponent;
+import se.angergard.game.component.SpeedComponent;
 import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.enums.LightType;
 
@@ -21,9 +23,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class EntityUtils {
 	
-	public static final Entity createEnemyAStar(float x, float y){
-		System.out.println("createEnemyAStar, World is locked: " + Objects.WORLD.isLocked());
-		
+	public static final Entity createEnemyAStar(float x, float y){		
 		Entity entity = new Entity();
 		
 		EnemyComponent enemyComponent = new EnemyComponent();
@@ -34,32 +34,31 @@ public class EntityUtils {
 		
 		Box2DComponent box2DComponent = Box2DUtils.create(spriteComponent.sprite, BodyType.DynamicBody);
 		
-		AStarComponent aiStarComponent = new AStarComponent();
+		AStarComponent aStarComponent = new AStarComponent();
 
-		entity.add(enemyComponent);
-		entity.add(spriteComponent);
-		entity.add(aiStarComponent);
-		entity.add(box2DComponent);
+		SpeedComponent speedComponent = new SpeedComponent();
+		
+		AshleyUtils.addComponents(entity, enemyComponent, spriteComponent, aStarComponent, box2DComponent, speedComponent);
 		
 		box2DComponent.fixture.setUserData(entity);
 		
 		return entity;
 	}
 	
-	public static final Entity createEnemy(float x, float y){
-		Entity entity = new Entity();
-		
-		EnemyComponent enemyComponent = new EnemyComponent();
-		
-		SpriteComponent spriteComponent = new SpriteComponent();
-		spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Ai.png")));
-		spriteComponent.sprite.setPosition(x, y);
-		
-		entity.add(enemyComponent);
-		entity.add(spriteComponent);	
-
-		return entity;
-	}
+//	public static final Entity createEnemy(float x, float y){
+//		Entity entity = new Entity();
+//		
+//		EnemyComponent enemyComponent = new EnemyComponent();
+//		
+//		SpriteComponent spriteComponent = new SpriteComponent();
+//		spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Ai.png")));
+//		spriteComponent.sprite.setPosition(x, y);
+//		
+//		entity.add(enemyComponent);
+//		entity.add(spriteComponent);	
+//
+//		return entity;
+//	}
 		
 	public static final Entity createPlayer(){
 		Entity entity = new Entity();
@@ -79,7 +78,9 @@ public class EntityUtils {
 		healthComponent.health = new Health(Values.MAX_HEALTH);
 		healthComponent.heartTexture = new Texture(Gdx.files.internal("heart.png"));
 		
-		AshleyUtils.addComponents(entity, spriteComponent, box2DComponent, playerComponent, healthComponent);
+		ScoreComponent scoreComponent = new ScoreComponent();
+		
+		AshleyUtils.addComponents(entity, spriteComponent, box2DComponent, playerComponent, healthComponent, scoreComponent);
 		
 		box2DComponent.fixture.setUserData(entity);
 		

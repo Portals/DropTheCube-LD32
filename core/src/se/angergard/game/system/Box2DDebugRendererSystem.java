@@ -19,7 +19,7 @@ public class Box2DDebugRendererSystem extends EntitySystem implements Initializa
 	
 	@Override
 	public void update(float deltaTime) {
-		renderer.render(Objects.WORLD, Objects.CAMERA.combined.cpy().scl(Values.PIXELS_PER_METER));
+		renderer.render(Objects.world, Objects.camera.combined.cpy().scl(Values.PIXELS_PER_METER));
 	}
 
 

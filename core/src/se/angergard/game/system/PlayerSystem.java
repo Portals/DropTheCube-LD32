@@ -66,16 +66,16 @@ public class PlayerSystem extends IntervalSystem implements Initializable{
 		body.setLinearVelocity(velocity);
 		
 		if(Gdx.input.isKeyJustPressed(Keys.LEFT)){
-			sendRemoveFloorEntity(new Vector2(-Values.TILED_SIZE_PIXELS, 0));
+			sendRemoveFloorEntity(new Vector2(-Values.TILED_SIZE_PIXELS * 2, 0));
 		}
 		if(Gdx.input.isKeyJustPressed(Keys.RIGHT)){
-			sendRemoveFloorEntity(new Vector2(Values.TILED_SIZE_PIXELS, 0));	
+			sendRemoveFloorEntity(new Vector2(Values.TILED_SIZE_PIXELS * 2, 0));	
 		}
 		if(Gdx.input.isKeyJustPressed(Keys.UP)){
-			sendRemoveFloorEntity(new Vector2(0, Values.TILED_SIZE_PIXELS));
+			sendRemoveFloorEntity(new Vector2(0, Values.TILED_SIZE_PIXELS * 2));
 		}
 		if(Gdx.input.isKeyJustPressed(Keys.DOWN)){
-			sendRemoveFloorEntity(new Vector2(0, -Values.TILED_SIZE_PIXELS));
+			sendRemoveFloorEntity(new Vector2(0, -Values.TILED_SIZE_PIXELS * 2));
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class PlayerSystem extends IntervalSystem implements Initializable{
 		holeCreated = true;
 		
 		Sprite sprite = Objects.SPRITE_MAPPER.get(player).sprite;
-		Vector2 playerPosition = new Vector2(sprite.getX(), sprite.getY());
+		Vector2 playerPosition = new Vector2(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
 		
 		Entity entity = new Entity();
 		
