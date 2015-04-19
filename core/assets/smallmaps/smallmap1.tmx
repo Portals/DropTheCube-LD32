@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="72">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="73">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
@@ -31,6 +31,9 @@
   </object>
   <object id="63" x="208" y="160">
    <polyline points="0,0 16,0 16,64 -48,64 -48,48 0,48 0,0"/>
+  </object>
+  <object id="72" x="160" y="32">
+   <polyline points="0,0 0,16"/>
   </object>
  </objectgroup>
  <objectgroup color="#0000ff" name="PointLights">

@@ -13,6 +13,7 @@ import se.angergard.game.system.PlayerSystem;
 import se.angergard.game.system.RemoveEntityTimerSystem;
 import se.angergard.game.system.RemoveFloorSystem;
 import se.angergard.game.system.RendererSystem;
+import se.angergard.game.util.Box2DUtils;
 import se.angergard.game.util.CameraSize;
 import se.angergard.game.util.EntityUtils;
 import se.angergard.game.util.Objects;
@@ -38,7 +39,7 @@ public class PlayScreen implements Screen{
 	@Override
 	public void show() {
 		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
-		
+				
 		entityEngine = new Engine();
 
 		entityEngine.addEntity(EntityUtils.createPlayer());
@@ -57,12 +58,12 @@ public class PlayScreen implements Screen{
 		
 		ImmutableArray<EntitySystem> systems = entityEngine.getSystems();
 		
-		for(int i = 0; i < systems.size(); i++){
+		for(int i = 0; i < systems.size(); i++){ // It must have a Initializable
 			Initializable init = (Initializable) systems.get(i);
 			init.init();
 		}
 		
-		for(int i = 0; i < systems.size(); i++){
+		for(int i = 0; i < systems.size(); i++){ // It must not have a Createable
 			if(systems.get(i) instanceof Createable){
 				Createable create = (Createable) systems.get(i);
 				create.create();
@@ -78,7 +79,7 @@ public class PlayScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		Objects.CAMERA.update();
-	
+		
 		Objects.WORLD.step(delta, 6, 2);
 		entityEngine.update(delta);
 	}

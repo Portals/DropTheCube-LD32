@@ -50,7 +50,6 @@ public class AStarSystem extends IntervalSystem implements Initializable{
 				if(aiStarComponent == null){
 					return;
 				}
-				System.out.println("Let's start this show!");
 				entities.add(entity);
 			}
 

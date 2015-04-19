@@ -1,10 +1,12 @@
 package se.angergard.game.util;
 
+import se.angergard.game.Health;
 import se.angergard.game.component.AStarComponent;
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.ConeLightComponent;
 import se.angergard.game.component.DirectionalLightComponent;
 import se.angergard.game.component.EnemyComponent;
+import se.angergard.game.component.HealthComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.PointLightComponent;
@@ -13,13 +15,15 @@ import se.angergard.game.enums.LightType;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class EntityUtils {
 	
 	public static final Entity createEnemyAStar(float x, float y){
+		System.out.println("createEnemyAStar, World is locked: " + Objects.WORLD.isLocked());
+		
 		Entity entity = new Entity();
 		
 		EnemyComponent enemyComponent = new EnemyComponent();
@@ -28,7 +32,7 @@ public class EntityUtils {
 		spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Ai.png")));
 		spriteComponent.sprite.setPosition(x, y);
 		
-		Box2DComponent box2DComponent = Box2DUtils.create(spriteComponent.sprite);
+		Box2DComponent box2DComponent = Box2DUtils.create(spriteComponent.sprite, BodyType.DynamicBody);
 		
 		AStarComponent aiStarComponent = new AStarComponent();
 
@@ -36,6 +40,8 @@ public class EntityUtils {
 		entity.add(spriteComponent);
 		entity.add(aiStarComponent);
 		entity.add(box2DComponent);
+		
+		box2DComponent.fixture.setUserData(entity);
 		
 		return entity;
 	}
@@ -48,9 +54,10 @@ public class EntityUtils {
 		SpriteComponent spriteComponent = new SpriteComponent();
 		spriteComponent.sprite = new Sprite(new Texture(Gdx.files.internal("Ai.png")));
 		spriteComponent.sprite.setPosition(x, y);
-				
+		
 		entity.add(enemyComponent);
-		entity.add(spriteComponent);		
+		entity.add(spriteComponent);	
+
 		return entity;
 	}
 		
@@ -64,13 +71,17 @@ public class EntityUtils {
 		sprite.setScale(1.5f);
 		spriteComponent.sprite = sprite;
 		
-		Box2DComponent box2DComponent = Box2DUtils.create(sprite);
+		Box2DComponent box2DComponent = Box2DUtils.create(sprite, BodyType.DynamicBody);
 		
 		PlayerComponent playerComponent = new PlayerComponent();
 		
-		entity.add(spriteComponent);
-		entity.add(box2DComponent);
-		entity.add(playerComponent);
+		HealthComponent healthComponent = new HealthComponent();
+		healthComponent.health = new Health(Values.MAX_HEALTH);
+		healthComponent.heartTexture = new Texture(Gdx.files.internal("heart.png"));
+		
+		AshleyUtils.addComponents(entity, spriteComponent, box2DComponent, playerComponent, healthComponent);
+		
+		box2DComponent.fixture.setUserData(entity);
 		
 		return entity;
 	}

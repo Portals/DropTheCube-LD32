@@ -4,6 +4,7 @@ import se.angergard.game.component.AStarComponent;
 import se.angergard.game.component.Box2DComponent;
 import se.angergard.game.component.ConeLightComponent;
 import se.angergard.game.component.DirectionalLightComponent;
+import se.angergard.game.component.HealthComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.RemoveEntityTimerComponent;
@@ -13,12 +14,14 @@ import se.angergard.game.component.SpriteComponent;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Objects {
 
+	public static final SpriteBatch BATCH = new SpriteBatch();
 	public static final OrthographicCamera CAMERA = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	public static final World WORLD = new World(Values.GRAVITY, false);
+	public static World WORLD = new World(Values.GRAVITY, false);
 
 	public static final ComponentMapper<ConeLightComponent> CONE_LIGHT_MAPPER = ComponentMapper.getFor(ConeLightComponent.class);
 	public static final ComponentMapper<PointLightComponent> POINT_LIGHT_MAPPER = ComponentMapper.getFor(PointLightComponent.class);
@@ -29,5 +32,6 @@ public class Objects {
 	public static final ComponentMapper<RemoveFloorComponent> REMOVE_FLOOR_MAPPER = ComponentMapper.getFor(RemoveFloorComponent.class);
 	public static final ComponentMapper<RemoveEntityTimerComponent> REMOVE_ENTITY_TIMER_MAPPER = ComponentMapper.getFor(RemoveEntityTimerComponent.class);;
 	public static final ComponentMapper<AStarComponent> AI_STAR_MAPPER = ComponentMapper.getFor(AStarComponent.class);
+	public static final ComponentMapper<HealthComponent> HEALTH_MAPPER = ComponentMapper.getFor(HealthComponent.class);
 	
 }

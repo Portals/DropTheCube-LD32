@@ -25,11 +25,10 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
 public class Box2DUtils {
-	
-	private static final Body createBody(float x, float y){
+	private static final Body createBody(float x, float y, float width, float height, BodyType bodyType){
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(Pixels.toMeters(new Vector2(x, y)));
+		bodyDef.type = bodyType;
+		bodyDef.position.set(Pixels.toMeters(new Vector2(x + width / 2, y + height / 2)));
 		bodyDef.fixedRotation = true;
 
 		return Objects.WORLD.createBody(bodyDef);
@@ -47,10 +46,10 @@ public class Box2DUtils {
 		return fixture;
 	}
 
-	public static final Box2DComponent create(Sprite sprite){
+	public static final Box2DComponent create(Sprite sprite, BodyType bodyType){
 		Box2DComponent box2DComponent = new Box2DComponent();
 
-		Body body = createBody(sprite.getX(), sprite.getY());
+		Body body = createBody(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), bodyType);
 		
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(Pixels.toMeters(sprite.getScaleX() * sprite.getWidth() / 2), Pixels.toMeters(sprite.getScaleY() * sprite.getHeight() / 2));
@@ -64,12 +63,13 @@ public class Box2DUtils {
 	}
 	
 	public static final Box2DComponent createCircle(Sprite sprite){
+		
 		Box2DComponent box2DComponent = new Box2DComponent();
 
-		Body body = createBody(sprite.getX(), sprite.getY());
+		Body body = createBody(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), BodyType.StaticBody);
 		
 		CircleShape circle = new CircleShape();
-		circle.setRadius(sprite.getWidth());
+		circle.setRadius(Pixels.toMeters(sprite.getWidth()  - 3) / 2);
 		
 		Fixture fixture = createFixture(body, circle);
 		
@@ -80,6 +80,7 @@ public class Box2DUtils {
 	}
 
 	public static ImmutableArray<Body> create(TiledMap tiledMap) {
+		
 		MapLayer collisionLayer = tiledMap.getLayers().get("Collision");
 		
 		Array<Body> bodies = new Array<Body>();
@@ -174,6 +175,41 @@ public class Box2DUtils {
 		shape.set(worldVertices);
 		
 		return shape;
+	}
+	
+	public static void destroyBody(Body body) {
+		Box2DComponent box2DComponent = new Box2DComponent();
+		box2DComponent.body = body;
+		destroyBody(box2DComponent);
+	}
+
+	public static void destroyBody(Box2DComponent box2DComponent) {
+		if(box2DComponent == null){
+			return;
+		}
+		
+		Body bodyToDestroy = box2DComponent.body;
+		Fixture fixture = box2DComponent.fixture;
+		
+		if(fixture != null){
+			fixture.setUserData(null);
+		}
+		
+		Array<Body> bodies = new Array<Body>();
+		Objects.WORLD.getBodies(bodies);
+		
+		if(bodies.size == 0){
+			System.out.println("No bodies exist to destroy");
+		}
+		
+		for(Body body : bodies){
+			if(body == bodyToDestroy){
+				Objects.WORLD.destroyBody(body);
+				return;
+			}
+		}
+		
+		System.out.println("Couldn't destroy this body, it doesn't exist...");
 	}
 
 //	private static PolygonShape getRectangle(RectangleMapObject object) {

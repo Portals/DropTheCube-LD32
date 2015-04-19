@@ -18,27 +18,25 @@ public class RendererSystem extends IteratingSystem implements Initializable{
 		super(Family.getFor(SpriteComponent.class));
 	}
 	
-	private SpriteBatch batch;
 	private Array<Sprite> renderQueue;
 	
 
 	@Override
 	public void init() {
-		batch = new SpriteBatch();
 		renderQueue = new Array<Sprite>();
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);		
-		batch.setProjectionMatrix(Objects.CAMERA.combined);
-		batch.begin();
+		Objects.BATCH.setProjectionMatrix(Objects.CAMERA.combined);
+		Objects.BATCH.begin();
 		
 		for(Sprite sprite : renderQueue){
-			sprite.draw(batch);
+			sprite.draw(Objects.BATCH);
 		}
 		
-		batch.end();
+		Objects.BATCH.end();
 		
 		renderQueue.clear();
 	}

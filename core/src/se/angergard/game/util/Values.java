@@ -12,7 +12,7 @@ public class Values {
 	public static final int MAP_SIZE_PIXELS = MAP_SIZE * TILED_SIZE_PIXELS;
 	public static final int MAPS = 4;
 	
-	public static final float CAMERA_ZOOM = 1/2f;
+	public static final float CAMERA_ZOOM = 0.55f;
 	
 	public static final Vector2 GRAVITY = new Vector2(0, 0);
 
@@ -40,5 +40,7 @@ public class Values {
 	public static final float POINT_LIGHT_DEFAULT_MAX_DISTANCE = 10f;
 
 	public static final int POINT_LIGHT_DEFAULT_NUM_RAYS = 50;
+
+	public static final int MAX_HEALTH = 3;
 	
 }

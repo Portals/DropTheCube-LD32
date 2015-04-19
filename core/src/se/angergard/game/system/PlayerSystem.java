@@ -1,29 +1,34 @@
 package se.angergard.game.system;
 
+import se.angergard.game.Health;
 import se.angergard.game.component.Box2DComponent;
+import se.angergard.game.component.HoleComponent;
 import se.angergard.game.component.PlayerComponent;
-import se.angergard.game.component.PointLightComponent;
 import se.angergard.game.component.RemoveFloorComponent;
-import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.interfaces.Initializable;
+import se.angergard.game.util.AshleyUtils;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Values;
-import box2dLight.PointLight;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class PlayerSystem extends EntitySystem implements Initializable{
+public class PlayerSystem extends IntervalSystem implements Initializable{
+
+	public PlayerSystem() {
+		super(.1f);
+	}
 
 	private Entity player;
 	private Engine engine;
+	private boolean holeCreated = false;
 	
 	@Override
 	public void init() {
@@ -39,6 +44,7 @@ public class PlayerSystem extends EntitySystem implements Initializable{
 	
 	@Override
 	public void update(float deltaTime) {
+		super.update(deltaTime);
 		Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(player);
 		Body body = box2DComponent.body;
 		
@@ -74,6 +80,11 @@ public class PlayerSystem extends EntitySystem implements Initializable{
 	}
 	
 	private void sendRemoveFloorEntity(Vector2 tileChange){
+		if(holeCreated){
+			return;
+		}
+		holeCreated = true;
+		
 		Sprite sprite = Objects.SPRITE_MAPPER.get(player).sprite;
 		Vector2 playerPosition = new Vector2(sprite.getX(), sprite.getY());
 		
@@ -85,6 +96,11 @@ public class PlayerSystem extends EntitySystem implements Initializable{
 		entity.add(removeFloorComponent);
 		
 		engine.addEntity(entity);
+	}
+
+	@Override
+	protected void updateInterval() {
+		holeCreated = AshleyUtils.entityWithComponentExist(engine, HoleComponent.class);
 	}
 
 	

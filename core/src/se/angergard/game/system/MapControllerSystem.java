@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import se.angergard.game.astar.AStar;
 import se.angergard.game.component.Box2DComponent;
+import se.angergard.game.component.HoleComponent;
 import se.angergard.game.component.LightComponent;
 import se.angergard.game.component.PlayerComponent;
 import se.angergard.game.component.PointLightComponent;
@@ -11,11 +12,13 @@ import se.angergard.game.component.SpriteComponent;
 import se.angergard.game.enums.LightType;
 import se.angergard.game.interfaces.Createable;
 import se.angergard.game.interfaces.Initializable;
+import se.angergard.game.util.AshleyUtils;
 import se.angergard.game.util.Box2DUtils;
 import se.angergard.game.util.CameraSize;
 import se.angergard.game.util.EntityUtils;
 import se.angergard.game.util.Objects;
 import se.angergard.game.util.Pixels;
+import se.angergard.game.util.RunnablePool;
 import se.angergard.game.util.Values;
 
 import com.badlogic.ashley.core.Engine;
@@ -25,6 +28,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -33,14 +37,18 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class MapControllerSystem extends EntitySystem implements Initializable, Createable{
@@ -53,6 +61,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	private ImmutableArray<Body> tiledMapBodies;
 	private Array<Entity> pointLights;
 	private Array<Entity> enemies;
+	private RunnablePool runnablePool;
 
 	@Override
 	public void init() {
@@ -72,13 +81,36 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		pointLights = new Array<Entity>();
 		enemies = new Array<Entity>();
 		
+		runnablePool = new RunnablePool();
 		
 		Objects.WORLD.setContactListener(new ContactListener(){
 
 			@Override
-			public void beginContact(Contact contact) {
-				contact.getFixtureA();
-				contact.getFixtureB();
+			public void beginContact(final Contact contact) {
+				runnablePool.add(new Runnable(){
+					@Override
+					public void run() {
+						if(Objects.WORLD.isLocked()){
+							runnablePool.add(this);
+							return;
+						}
+						
+						if(contact == null){
+							return;
+						}
+						
+						if(contact.getFixtureA() == null || contact.getFixtureB() == null){
+							return;
+						}
+						
+						Entity e1 = (Entity) contact.getFixtureA().getUserData();
+						Entity e2 = (Entity) contact.getFixtureB().getUserData();
+						
+						if(e1 == null || e2 == null){
+							return;
+						}
+					}
+				});
 			}
 
 			@Override
@@ -101,7 +133,7 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	
 	@Override
 	public void create() {
-		loadMap(0);
+		loadMap(0, new Vector2(Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -112,43 +144,62 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 	}
 	
 	public void update(float delta){
-		Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(player);
-		Body body = box2DComponent.body;
+		checkCollision(); //Just because Box2D worked sometimes, and sometimes it didn't. I'm going to create my own Physics library after this. 
 		
 		SpriteComponent spriteComponent = Objects.SPRITE_MAPPER.get(player);
 		Sprite sprite = spriteComponent.sprite;
 		float xPos = sprite.getX();
 		float yPos = sprite.getY();
 
+		Vector2 newPosition = null;
+		
 		if(xPos <= 5){
-			body.setTransform(Pixels.toMeters(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 2), Pixels.toMeters(CameraSize.getHeight() / 2), 0);
-			loadMap(MathUtils.random(0, maps.length - 1));
+			newPosition = new Vector2(CameraSize.getWidth() - Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2);
 		}
 		
 		else if(yPos <= 5){
-			body.setTransform(Pixels.toMeters(CameraSize.getWidth() / 2), Pixels.toMeters(CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 2), 0);
-			loadMap(MathUtils.random(0, maps.length - 1));		
+			newPosition = new Vector2(CameraSize.getWidth() / 2, CameraSize.getHeight() - Values.TILED_SIZE_PIXELS * 2);
 		}
 		
 		else if(xPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
-			body.setTransform(Pixels.toMeters(Values.TILED_SIZE_PIXELS * 2), Pixels.toMeters(CameraSize.getHeight() / 2), 0);
-			loadMap(MathUtils.random(0, maps.length - 1));		
+			newPosition = new Vector2(Values.TILED_SIZE_PIXELS * 2, CameraSize.getHeight() / 2);
 		}
 		
 		else if(yPos >= Values.MAP_SIZE_PIXELS - Values.TILED_SIZE_PIXELS){
-			body.setTransform(Pixels.toMeters(CameraSize.getWidth() / 2), Pixels.toMeters(Values.TILED_SIZE_PIXELS * 2), 0);
-			loadMap(MathUtils.random(0, maps.length - 1));			
+			newPosition = new Vector2(CameraSize.getWidth() / 2, Values.TILED_SIZE_PIXELS * 2);
+		}
+		
+		final Vector2 newPosition2 = newPosition;
+		
+		if(newPosition != null){
+			runnablePool.add(new Runnable(){
+				@Override
+				public void run() {
+					if(!Objects.WORLD.isLocked()){
+						loadMap(MathUtils.random(0, maps.length - 1), newPosition2);				
+					}
+					else{
+						runnablePool.add(this);
+					}
+				}
+			});
 		}
 		
 		mapRenderer.setView(Objects.CAMERA);
 		mapRenderer.render();
+		
+		runnablePool.run();
 	}
 		
-	private void loadMap(int map){
+	private void loadMap(int map, Vector2 newPosition){
 		if(tiledMapBodies != null){//Map has been changed
+			//Destroy old Player
+			Box2DComponent playerPox2DComponent = Objects.BOX2D_MAPPER.get(player);
+			Box2DUtils.destroyBody(playerPox2DComponent);
+						
 			//Destroy all old bodies
 			for(int i = 0; i < tiledMapBodies.size(); i++){
-				Objects.WORLD.destroyBody(tiledMapBodies.get(i));
+				Box2DUtils.destroyBody(tiledMapBodies.get(i));
 			}
 			
 			//Removes all old lights
@@ -159,13 +210,36 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 			//Removes all enemies
 			for(Entity enemy : enemies){
 				Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(enemy);
-				Objects.WORLD.destroyBody(box2DComponent.body);
+				Box2DUtils.destroyBody(box2DComponent);
 				
 				engine.removeEntity(enemy);
 			}
 			
+			if(AshleyUtils.entityWithComponentExist(engine, HoleComponent.class)){
+				@SuppressWarnings("unchecked")
+				Entity entity = engine.getEntitiesFor(Family.getFor(HoleComponent.class)).first();
+				
+				Box2DComponent box2DComponent = Objects.BOX2D_MAPPER.get(entity);
+				Box2DUtils.destroyBody(box2DComponent);
+				
+				engine.removeEntity(entity);
+			}
+						
+			System.out.println("Body count: " + Objects.WORLD.getBodyCount());
+			
 			pointLights.clear();
 			enemies.clear();
+			
+			Objects.WORLD = new World(new Vector2(0, 0), false);
+			
+			System.out.println("Welcome, to the new World!");
+			SpriteComponent playerSpriteComponent = Objects.SPRITE_MAPPER.get(player);
+			playerSpriteComponent.sprite.setPosition(newPosition.x, newPosition.y);
+			
+			Box2DComponent newPlayerBox2DComponent = Box2DUtils.create(playerSpriteComponent.sprite, BodyType.DynamicBody);
+			
+			playerPox2DComponent.body = newPlayerBox2DComponent.body;
+			playerPox2DComponent.fixture = newPlayerBox2DComponent.fixture;
 		}
 		
 		initSolidTiles(maps[map]);
@@ -250,6 +324,43 @@ public class MapControllerSystem extends EntitySystem implements Initializable, 
 		
 	}
 
+	private void checkCollision(){
+		@SuppressWarnings("unchecked")
+		ImmutableArray<Entity> potentiallyHoleArray = engine.getEntitiesFor(Family.getFor(HoleComponent.class));
+		
+		if(potentiallyHoleArray.size() == 0){
+			System.out.println("No hole found");
+			return;
+		}
+		
+		Entity hole = potentiallyHoleArray.first();
+		
+		SpriteComponent holeSpriteComponent = Objects.SPRITE_MAPPER.get(hole);
+		Sprite holeSprite = holeSpriteComponent.sprite;
+		
+		Circle circle = new Circle(holeSprite.getX() + holeSprite.getWidth() / 2, holeSprite.getY() + holeSprite.getHeight() / 2, holeSprite.getWidth() / 2 + 1);
+		
+		Array<Entity> enemiesToRemove = new Array<Entity>();
+		
+		for(Entity enemy : enemies){
+			SpriteComponent enemySpriteComponent = Objects.SPRITE_MAPPER.get(enemy);
+			Sprite enemySprite = enemySpriteComponent.sprite;
+			
+			if(Intersector.overlaps(circle, enemySprite.getBoundingRectangle())){
+				Box2DComponent enemyBox2DComponent = Objects.BOX2D_MAPPER.get(enemy);
+				engine.removeEntity(enemy);
+				Box2DUtils.destroyBody(enemyBox2DComponent);
+				enemiesToRemove.add(enemy);
+			}
+		}
+		
+		for(Entity enemyToRemove : enemiesToRemove){
+			enemies.removeValue(enemyToRemove, true);
+		}
+		
+		enemiesToRemove.clear();
+		
+	}
 	
 }
 

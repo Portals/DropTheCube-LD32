@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="72">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="74">
  <tileset firstgid="1" name="TiledSheet" tilewidth="16" tileheight="16">
   <image source="../TiledSheet.png" width="32" height="32"/>
  </tileset>
@@ -10,21 +10,21 @@
  </layer>
  <layer name="CollisionTiles" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYMSBYQCXPLo6UgEh/SNVnhGLPD51uPi47CRHjhQ7SXH/YAz/wSJPCBCbL/GpAQCkoABR
+   eJxjZGBgYMSBYQCXPLo6UgEh/UxQTK7+oSrPiEUenzpcfFx2kiNHip2kuH8whj+15ClNv4QAsfkSnxoArKgAVQ==
   </data>
  </layer>
  <objectgroup color="#ff0000" name="Collision">
   <object id="1" x="16" y="16">
    <polyline points="0,0 0,96 -16,96 -16,128 0,128 0,224 96,224 96,240 128,240 128,224 224,224 224,128 240,128 240,96 224,96 224,0 128,0 128,-16 96,-16 96,0 0,0"/>
   </object>
-  <object id="4" x="112" y="32" width="32" height="80"/>
   <object id="5" x="80" y="96" width="16" height="16"/>
   <object id="6" x="48" y="112" width="16" height="32"/>
   <object id="7" x="80" y="144" width="16" height="16"/>
-  <object id="8" x="112" y="144" width="32" height="80"/>
   <object id="9" x="160" y="144" width="16" height="16"/>
   <object id="10" x="192" y="112" width="16" height="32"/>
   <object id="11" x="160" y="96" width="16" height="16"/>
+  <object id="72" x="112" y="48" width="32" height="64"/>
+  <object id="73" x="112" y="144" width="32" height="64"/>
  </objectgroup>
  <objectgroup color="#0000ff" name="PointLights">
   <object id="37" x="112" y="0" width="32" height="16">
